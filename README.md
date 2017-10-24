@@ -1,4 +1,4 @@
-# Census
+# Census [![Build Status](https://travis-ci.org/juanmbellini/census.svg?branch=master)](https://travis-ci.org/juanmbellini/census)
 
 Distributed Objects Programming course Project
 
