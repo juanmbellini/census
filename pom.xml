@@ -18,22 +18,19 @@
     </modules>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Dependencies -->
+        <com.github.ekryd.sortpom.sortpom-maven-plugin.version>2.4.0</com.github.ekryd.sortpom.sortpom-maven-plugin.version>
         <com.hazelcast.hazelcast-all.version>3.6.5</com.hazelcast.hazelcast-all.version>
-        <org.apache.logging.log4j.log4j-bom.version>2.6.2</org.apache.logging.log4j.log4j-bom.version>
-        <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.10</junit.version>
-        <org.mockito.version>1.8.5</org.mockito.version>
-        <!-- Plugins -->
-        <org.apache.maven.plugins.maven-assembly-plugin.version>2.6</org.apache.maven.plugins.maven-assembly-plugin.version>
         <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.8</maven-eclipse-plugin.version>
+        <org.apache.logging.log4j.log4j-bom.version>2.6.2</org.apache.logging.log4j.log4j-bom.version>
+        <org.apache.maven.plugins.maven-assembly-plugin.version>2.6</org.apache.maven.plugins.maven-assembly-plugin.version>
         <org.apache.maven.plugins.maven-source-plugin.version>2.4</org.apache.maven.plugins.maven-source-plugin.version>
         <org.apache.maven.plugins.maven-surefire-plugin.version>2.12.4</org.apache.maven.plugins.maven-surefire-plugin.version>
-        <com.github.ekryd.sortpom.sortpom-maven-plugin.version>2.4.0</com.github.ekryd.sortpom.sortpom-maven-plugin.version>
         <org.jacoco.jacoco-maven-plugin.version>0.7.1.201405082137</org.jacoco.jacoco-maven-plugin.version>
-
+        <org.mockito.version>1.8.5</org.mockito.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.7.12</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -109,7 +106,6 @@
                     <encoding>utf-8</encoding>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>${maven-eclipse-plugin.version}</version>
@@ -119,7 +115,6 @@
                     <wtpversion>2.0</wtpversion>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -133,13 +128,11 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${org.apache.maven.plugins.maven-surefire-plugin.version}</version>
             </plugin>
-
             <plugin>
                 <groupId>com.github.ekryd.sortpom</groupId>
                 <artifactId>sortpom-maven-plugin</artifactId>
@@ -161,7 +154,6 @@
                     <verifyFail>Stop</verifyFail>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
