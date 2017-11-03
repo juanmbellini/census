@@ -23,7 +23,7 @@ public class Habitant {
     /**
      * The province name where the habitant lives.
      */
-    private final String province;
+    private final Province province;
 
 
     /**
@@ -32,13 +32,13 @@ public class Habitant {
      * @param activityConditionId The activity condition id.
      * @param homeId              The habitant's home id.
      * @param departmentName      The department name where the habitant is.
-     * @param state               The province name where the habitant lives.
+     * @param provinceName        The province name where the habitant lives.
      */
-    public Habitant(int activityConditionId, long homeId, String departmentName, String state) {
+    public Habitant(int activityConditionId, long homeId, String departmentName, String provinceName) {
         this.activityConditionId = activityConditionId;
         this.homeId = homeId;
         this.departmentName = departmentName;
-        this.province = state;
+        this.province = Province.fromName(provinceName);
     }
 
     /**
@@ -63,9 +63,16 @@ public class Habitant {
     }
 
     /**
-     * @return The province name where the habitant lives.
+     * @return The province where the habitant lives.
      */
-    public String getProvince() {
+    public Province getProvince() {
         return province;
+    }
+
+    /**
+     * @return The region where the habitant lives.
+     */
+    public Region getRegion() {
+        return province.getRegion();
     }
 }
