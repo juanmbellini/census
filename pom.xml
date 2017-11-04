@@ -31,6 +31,7 @@
         <org.mockito.version>1.8.5</org.mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.12</slf4j.version>
+        <super-csv.version>2.4.0</super-csv.version>
     </properties>
 
     <dependencyManagement>
@@ -46,6 +47,11 @@
                 <version>${org.apache.logging.log4j.log4j-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.supercsv</groupId>
+                <artifactId>super-csv</artifactId>
+                <version>${super-csv.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
