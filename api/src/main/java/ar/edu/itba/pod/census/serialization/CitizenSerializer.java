@@ -1,6 +1,6 @@
 package ar.edu.itba.pod.census.serialization;
 
-import ar.edu.itba.pod.census.models.Habitant;
+import ar.edu.itba.pod.census.models.Citizen;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.StreamSerializer;
@@ -8,11 +8,11 @@ import com.hazelcast.nio.serialization.StreamSerializer;
 import java.io.IOException;
 
 /**
- * Custom serializer that is in charge of reading/writing {@link Habitant}.
+ * Custom serializer that is in charge of reading/writing {@link Citizen}.
  */
-public class HabitantSerializer implements StreamSerializer<Habitant> {
+public class CitizenSerializer implements StreamSerializer<Citizen> {
     @Override
-    public void write(ObjectDataOutput out, Habitant habitant) throws IOException {
+    public void write(ObjectDataOutput out, Citizen habitant) throws IOException {
         out.writeInt(habitant.getActivityConditionId());
         out.writeLong(habitant.getHomeId());
         out.writeUTF(habitant.getDepartmentName());
@@ -20,13 +20,13 @@ public class HabitantSerializer implements StreamSerializer<Habitant> {
     }
 
     @Override
-    public Habitant read(ObjectDataInput in) throws IOException {
+    public Citizen read(ObjectDataInput in) throws IOException {
         final int activityConditionId = in.readInt();
         final long homeId = in.readLong();
         final String departmentName = in.readUTF();
         final String provinceName = in.readUTF();
 
-        return new Habitant(activityConditionId, homeId, departmentName, provinceName);
+        return new Citizen(activityConditionId, homeId, departmentName, provinceName);
     }
 
     @Override
