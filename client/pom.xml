@@ -20,6 +20,10 @@
             <artifactId>census-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
