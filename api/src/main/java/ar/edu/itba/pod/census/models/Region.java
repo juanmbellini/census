@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census;
+package ar.edu.itba.pod.census.models;
 
 /**
  * Enum containing the regions in which the census is divided into.
