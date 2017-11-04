@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.client.file;
+package ar.edu.itba.pod.census.client.io.input;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

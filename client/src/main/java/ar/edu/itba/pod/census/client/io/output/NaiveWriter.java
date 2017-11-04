@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.client.file;
+package ar.edu.itba.pod.census.client.io.output;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
