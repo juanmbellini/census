@@ -1,9 +1,10 @@
-package ar.edu.itba.pod.census.serialization;
+package ar.edu.itba.pod.census.api.serialization;
 
-import ar.edu.itba.pod.census.models.Citizen;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.StreamSerializer;
+
+import ar.edu.itba.pod.census.api.models.Citizen;
 
 import java.io.IOException;
 

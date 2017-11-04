@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.models;
+package ar.edu.itba.pod.census.api.models;
 
 /**
  * Class representing the data to be processed by the system (i.e an habitant from the census).

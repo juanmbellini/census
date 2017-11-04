@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.models;
+package ar.edu.itba.pod.census.api.models;
 
 import java.util.Arrays;
 import java.util.Collections;
