@@ -42,16 +42,16 @@
                 <version>${com.hazelcast.hazelcast-all.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.sf.supercsv</groupId>
+                <artifactId>super-csv</artifactId>
+                <version>${super-csv.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-bom</artifactId>
                 <version>${org.apache.logging.log4j.log4j-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.supercsv</groupId>
-                <artifactId>super-csv</artifactId>
-                <version>${super-csv.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
