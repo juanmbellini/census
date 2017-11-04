@@ -13,4 +13,12 @@
 
     <artifactId>census-api</artifactId>
     <name>census-api</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-all</artifactId>
+            <version>${com.hazelcast.hazelcast-all.version}</version>
+        </dependency>
+    </dependencies>
 </project>
