@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.queryreducers;
+package ar.edu.itba.pod.census.api.hazelcast.queryreducers;
 
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;

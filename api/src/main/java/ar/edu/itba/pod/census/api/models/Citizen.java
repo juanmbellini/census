@@ -1,9 +1,9 @@
-package ar.edu.itba.pod.census.models;
+package ar.edu.itba.pod.census.api.models;
 
 /**
  * Class representing the data to be processed by the system (i.e an habitant from the census).
  */
-public class Habitant {
+public class Citizen {
 
     /**
      * The activity condition id.
@@ -34,7 +34,7 @@ public class Habitant {
      * @param departmentName      The department name where the habitant is.
      * @param provinceName        The province name where the habitant lives.
      */
-    public Habitant(int activityConditionId, long homeId, String departmentName, String provinceName) {
+    public Citizen(int activityConditionId, long homeId, String departmentName, String provinceName) {
         this.activityConditionId = activityConditionId;
         this.homeId = homeId;
         this.departmentName = departmentName;

@@ -1,8 +1,8 @@
 package ar.edu.itba.pod.census.client.query;
 
-import ar.edu.itba.pod.census.querycombiners.Query1Combiner;
-import ar.edu.itba.pod.census.querymappers.Query1Mapper;
-import ar.edu.itba.pod.census.queryreducers.Query1Reducer;
+import ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query1Combiner;
+import ar.edu.itba.pod.census.api.hazelcast.querymappers.Query1Mapper;
+import ar.edu.itba.pod.census.api.hazelcast.queryreducers.Query1Reducer;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
 
