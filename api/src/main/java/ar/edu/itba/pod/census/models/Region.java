@@ -31,4 +31,17 @@ public enum Region {
     public String getName() {
         return name;
     }
+
+    /**
+     *
+     * @param code The value of a region
+     * @return The instance of the region corresponding to the value
+     */
+    public static Region getByVal(String code) throws IllegalArgumentException {
+        for (Region region : Region.values()){
+            if(code.equals(region.name)) return region;
+        }
+
+        throw new IllegalArgumentException();
+    }
 }
