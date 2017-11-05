@@ -2,8 +2,11 @@ package ar.edu.itba.pod.census.queryreducers;
 
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Query1Reducer implements ReducerFactory<String, Long, Long> {
+    private final static Logger LOGGER = LoggerFactory.getLogger(Query1Reducer.class);
 
     @Override
     public Reducer<Long, Long> newReducer(String s) {
@@ -25,6 +28,7 @@ public class Query1Reducer implements ReducerFactory<String, Long, Long> {
 
         @Override
         public Long finalizeReduce() {
+            LOGGER.info("Reducer returning {} for Query1", sum);
             return sum;
         }
 

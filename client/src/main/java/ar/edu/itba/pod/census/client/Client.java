@@ -28,23 +28,26 @@ public class Client {
 
         // Asi se setean todas las IP que vienen por parametro, se le puede mandar una lista/array/etc
         ClientNetworkConfig networkConfig = new ClientNetworkConfig();
-        networkConfig.addAddress("127.0.0.1:5701");
-        config.setNetworkConfig(networkConfig);
+        networkConfig.addAddress("127.0.0.1");
 
+        config.setNetworkConfig(networkConfig);
+        // networkConfig.setSmartRouting(true);
 
         HazelcastInstance hazelcastClient = HazelcastClient.newHazelcastClient(config);
 
         // Generar el tipo de mapa en base a la query y cargarlo
         IMap<String, String> map = hazelcastClient.getMap("data");
 
+        LOGGER.info("Loading map");
         //___________________________________
         for (int i = 0; i < 1000; i++){
+            LOGGER.info("Loading map {}", i);
             map.put(String.valueOf(i), "Región Buenos Aires");
         }
         //___________________________________
         LOGGER.info("Map loaded");
 
-        JobTracker tracker = hazelcastClient.getJobTracker("data-data");
+        JobTracker tracker = hazelcastClient.getJobTracker("default");
         LOGGER.info("Tracker loaded");
 
         KeyValueSource<String, String> source = KeyValueSource.fromMap(map);
@@ -62,7 +65,7 @@ public class Client {
                 LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue() );
             }
         } catch (Exception e){
-            LOGGER.info("BOOOOOOOM");
+            LOGGER.info("BOOOOOOOOOOOOOOOOOOOOOOOOOOM");
         }
 
     }
