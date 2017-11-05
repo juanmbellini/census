@@ -11,8 +11,8 @@ import java.util.Optional;
  */
 public class InputParams {
 
-    private String name;
-    private String pass;
+//    private String name;
+//    private String pass;
 
 
     // =======================================
@@ -25,13 +25,13 @@ public class InputParams {
     // Files arguments
     // =======================================
     @SystemProperty(value = "inPath", defaultValue = "census.csv")
-    private String dataFilePath = "census.csv";
+    private String dataFilePath;
 
     @SystemProperty(value = "outPath", defaultValue = "output.txt")
-    private String outputFilePath = "output.txt";
+    private String outputFilePath;
 
     @SystemProperty(value = "timeOutPath", defaultValue = "time.txt")
-    private String timestampsFilePath = "time.txt";
+    private String timestampsFilePath;
 
     // =======================================
     // Execution arguments
@@ -59,13 +59,13 @@ public class InputParams {
         // TODO: validate arguments
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPass() {
-        return pass;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public String getPass() {
+//        return pass;
+//    }
 
 
     /**
@@ -117,11 +117,65 @@ public class InputParams {
         return prov;
     }
 
+
+    // ================================================
+    // Setters for JEasy
+    // ================================================
+
+    /**
+     * @param addresses Sets the addresses.
+     */
+    public void setAddresses(String[] addresses) {
+        this.addresses = addresses;
+    }
+
+    /**
+     * @param dataFilePath Sets the data file path.
+     */
+    public void setDataFilePath(String dataFilePath) {
+        this.dataFilePath = dataFilePath;
+    }
+
+    /**
+     * @param outputFilePath Sets the output file path.
+     */
+    public void setOutputFilePath(String outputFilePath) {
+        this.outputFilePath = outputFilePath;
+    }
+
+    /**
+     * @param timestampsFilePath Sets the timestamps output file path.
+     */
+    public void setTimestampsFilePath(String timestampsFilePath) {
+        this.timestampsFilePath = timestampsFilePath;
+    }
+
+    /**
+     * @param queryId Sets the query id.
+     */
+    public void setQueryId(int queryId) {
+        this.queryId = queryId;
+    }
+
+    /**
+     * @param n Sets the n query param.
+     */
+    public void setN(Integer n) {
+        this.n = n;
+    }
+
+    /**
+     * @param prov Sets the prov query param.
+     */
+    public void setProv(String prov) {
+        this.prov = prov;
+    }
+
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("name: ").append(name).append("\n");
-        stringBuilder.append("pass: ").append(pass).append("\n");
+//        stringBuilder.append("name: ").append(name).append("\n");
+//        stringBuilder.append("pass: ").append(pass).append("\n");
         stringBuilder.append("addresses: ").append(Arrays.toString(addresses)).append("\n");
         stringBuilder.append("data file path: ").append(dataFilePath).append("\n");
         stringBuilder.append("output path: ").append(outputFilePath).append("\n");
