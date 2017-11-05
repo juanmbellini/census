@@ -1,6 +1,6 @@
 package ar.edu.itba.pod.census.querymappers;
 
-import ar.edu.itba.pod.census.models.Region;
+import ar.edu.itba.pod.census.api.models.Region;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 import org.slf4j.Logger;
