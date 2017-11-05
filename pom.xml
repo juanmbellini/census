@@ -28,6 +28,7 @@
         <org.apache.maven.plugins.maven-source-plugin.version>2.4</org.apache.maven.plugins.maven-source-plugin.version>
         <org.apache.maven.plugins.maven-surefire-plugin.version>2.12.4</org.apache.maven.plugins.maven-surefire-plugin.version>
         <org.jacoco.jacoco-maven-plugin.version>0.7.1.201405082137</org.jacoco.jacoco-maven-plugin.version>
+        <org.jeasy.version>2.0.1</org.jeasy.version>
         <org.mockito.version>1.8.5</org.mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.12</slf4j.version>
@@ -36,6 +37,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jeasy</groupId>
+                <artifactId>easy-props</artifactId>
+                <version>${org.jeasy.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.hazelcast</groupId>
                 <artifactId>hazelcast-all</artifactId>
