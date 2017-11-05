@@ -24,6 +24,10 @@
             <groupId>net.sf.supercsv</groupId>
             <artifactId>super-csv</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-props</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
