@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.querycombiners;
+package ar.edu.itba.pod.census.api.hazelcast.querycombiners;
 
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;

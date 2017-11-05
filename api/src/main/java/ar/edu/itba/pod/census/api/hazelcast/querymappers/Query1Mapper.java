@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.querymappers;
+package ar.edu.itba.pod.census.api.hazelcast.querymappers;
 
 import ar.edu.itba.pod.census.api.models.Region;
 import com.hazelcast.mapreduce.Context;
