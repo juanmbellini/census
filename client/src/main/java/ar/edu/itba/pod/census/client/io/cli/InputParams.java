@@ -6,6 +6,9 @@ import org.jeasy.props.annotations.SystemProperty;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * Container class that holds program arguments.
+ */
 public class InputParams {
 
     private String name;
