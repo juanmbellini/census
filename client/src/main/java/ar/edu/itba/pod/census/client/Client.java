@@ -1,10 +1,15 @@
 package ar.edu.itba.pod.census.client;
 
+import ar.edu.itba.pod.census.api.models.Citizen;
+import ar.edu.itba.pod.census.api.serialization.CitizenSerializer;
+import ar.edu.itba.pod.census.client.io.cli.InputParams;
 import ar.edu.itba.pod.census.client.query.Query1;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
+import com.hazelcast.config.SerializationConfig;
+import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
@@ -20,27 +25,19 @@ public class Client {
 
     public static void main(String[] args) {
         LOGGER.info("census Client Starting ...");
-        ClientConfig config = new ClientConfig();
 
-        GroupConfig groupConfig = config.getGroupConfig();
-        groupConfig.setName("dev");
-        groupConfig.setPassword("dev-pass");
+        // Get program arguments
+        final InputParams inputParams = new InputParams();
 
-        // Asi se setean todas las IP que vienen por parametro, se le puede mandar una lista/array/etc
-        ClientNetworkConfig networkConfig = new ClientNetworkConfig();
-        networkConfig.addAddress("127.0.0.1");
-
-        config.setNetworkConfig(networkConfig);
-        // networkConfig.setSmartRouting(true);
-
-        HazelcastInstance hazelcastClient = HazelcastClient.newHazelcastClient(config);
+        // Create the already configured hazelcast instance
+        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses(), "dev", "dev-pass");
 
         // Generar el tipo de mapa en base a la query y cargarlo
         IMap<String, String> map = hazelcastClient.getMap("data");
 
         LOGGER.info("Loading map");
         //___________________________________
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 1000; i++) {
             LOGGER.info("Loading map {}", i);
             map.put(String.valueOf(i), "Región Buenos Aires");
         }
@@ -61,12 +58,51 @@ public class Client {
             Map<String, Long> result = new Query1().execute(job);
             LOGGER.info("Results obtained: {}", result.size());
 
-            for (Map.Entry<String, Long> entry: result.entrySet()){
-                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue() );
+            for (Map.Entry<String, Long> entry : result.entrySet()) {
+                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.info("BOOOOOOOOOOOOOOOOOOOOOOOOOOM");
         }
+    }
 
+    /**
+     * Creates and configures a {@link HazelcastInstance} to be used as a client.
+     *
+     * @return The created and configured {@link HazelcastInstance}.
+     */
+    private static HazelcastInstance createHazelcastClient(String[] addresses, String groupName, String groupPassword) {
+
+        // ================================
+        // Serialization config
+        // ================================
+        final SerializationConfig serializationConfig = new SerializationConfig()
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new CitizenSerializer())
+                        .setTypeClass(Citizen.class));
+
+        // ================================
+        // Networking config
+        // ================================
+        final ClientNetworkConfig networkingConfig = new ClientNetworkConfig()
+                .addAddress(addresses);
+
+        // ================================
+        // Group config
+        // ================================
+        final GroupConfig groupConfig = new GroupConfig()
+                .setName(groupName)
+                .setPassword(groupPassword);
+
+        // ================================
+        // Instance config
+        // ================================
+        final ClientConfig config = new ClientConfig()
+                .setSerializationConfig(serializationConfig)
+                .setNetworkConfig(networkingConfig)
+                .setGroupConfig(groupConfig);
+
+        // Create the Hazelcast Client using the specified configuration
+        return HazelcastClient.newHazelcastClient(config);
     }
 }
