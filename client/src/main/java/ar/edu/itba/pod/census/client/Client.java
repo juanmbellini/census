@@ -1,11 +1,15 @@
 package ar.edu.itba.pod.census.client;
 
+import ar.edu.itba.pod.census.client.query.Query1;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +34,36 @@ public class Client {
 
         HazelcastInstance hazelcastClient = HazelcastClient.newHazelcastClient(config);
 
-        // ManagementCenterConfig manCenterCfg = new ManagementCenterConfig();
-        // manCenterCfg.setEnabled(true).setUrl("http://localhost:8080/mancenter");
+        // Generar el tipo de mapa en base a la query y cargarlo
+        IMap<String, String> map = hazelcastClient.getMap("data");
 
-        IMap<Long, String> map = hazelcastClient.getMap("data");
-
-        for (Map.Entry<Long, String> entry : map.entrySet()) {
-            LOGGER.info(entry.getKey() + " - " + entry.getValue());
+        //___________________________________
+        for (int i = 0; i < 1000; i++){
+            map.put(String.valueOf(i), "Región Buenos Aires");
         }
+        //___________________________________
+        LOGGER.info("Map loaded");
+
+        JobTracker tracker = hazelcastClient.getJobTracker("data-data");
+        LOGGER.info("Tracker loaded");
+
+        KeyValueSource<String, String> source = KeyValueSource.fromMap(map);
+        LOGGER.info("Source loaded");
+
+        Job<String, String> job = tracker.newJob(source);
+        LOGGER.info("Job generated");
+
+
+        try {
+            Map<String, Long> result = new Query1().execute(job);
+            LOGGER.info("Results obtained: {}", result.size());
+
+            for (Map.Entry<String, Long> entry: result.entrySet()){
+                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue() );
+            }
+        } catch (Exception e){
+            LOGGER.info("BOOOOOOOM");
+        }
+
     }
 }
