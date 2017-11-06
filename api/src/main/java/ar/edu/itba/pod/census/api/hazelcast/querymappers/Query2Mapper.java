@@ -30,13 +30,14 @@ public class Query2Mapper<K> implements CounterByValueInMapper<K, Citizen, Strin
     private String provinceName; 
     
     public Query2Mapper(final String provinceName) {
+    	LOGGER.info("initializing query 2 mapper with province: {}", provinceName);
     	this.provinceName = provinceName;
 		}
     
     @Override
     public void map(K key, Citizen citizen, Context<String, Long> context) {
         LOGGER.trace("Started mapping...");
-        if (citizen.getProvince().equals(this.provinceName)) {
+        if (citizen.getProvince().getName().equals(this.provinceName)) {
         	CounterByValueInMapper.super.map(key, citizen, context);
         }
         LOGGER.trace("Finished mapping");
