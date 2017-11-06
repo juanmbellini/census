@@ -25,7 +25,7 @@ public interface Query<K, V> {
     /**
      * Container class that holds query params.
      */
-    final class QueryParamsContainer {
+    final static class QueryParamsContainer {
 
         /**
          * The 'n' query param.

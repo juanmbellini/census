@@ -3,14 +3,23 @@ package ar.edu.itba.pod.census.client.query;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.mapreduce.Job;
 
+import ar.edu.itba.pod.census.api.models.Region;
+
 /**
  * Enum holding values that represent all the {@link HazelcastQuery} supported by the system.
  */
 public enum HazelcastQueryCreator {
     QUERY_1(1) {
         @Override
-        public HazelcastQuery createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+        public HazelcastQuery<Region, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query1(hazelcastInstance);
+        }
+    },
+	
+	  QUERY_2(2) {
+        @Override
+        public HazelcastQuery<String, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+            return new Query2(hazelcastInstance);
         }
     };
 
@@ -41,7 +50,7 @@ public enum HazelcastQueryCreator {
      * @param hazelcastInstance The {@link HazelcastInstance} from which the {@link Job} is constructed.
      * @return The {@link HazelcastQuery} corresponding to the enum value.
      */
-    public abstract HazelcastQuery createHazelcastQuery(HazelcastInstance hazelcastInstance);
+    public abstract HazelcastQuery<?, ?> createHazelcastQuery(HazelcastInstance hazelcastInstance);
 
 
     // ================================================================
@@ -53,6 +62,7 @@ public enum HazelcastQueryCreator {
      */
     private static final HazelcastQueryCreator[] valuesByQueryId = {
             QUERY_1,
+            QUERY_2
     };
 
     /**
