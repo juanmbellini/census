@@ -21,7 +21,8 @@ public class Query1 extends HazelcastQuery<Region, Long> {
     }
 
     @Override
-    protected Map<Region, Long> perform(Job<Long, Citizen> job) throws ExecutionException, InterruptedException {
+    protected Map<Region, Long> perform(Job<Long, Citizen> job, QueryParamsContainer unused)
+            throws ExecutionException, InterruptedException {
         return job.mapper(new Query1Mapper<>())
                 .combiner(new Query1CombinerFactory())
                 .reducer(new Query1ReducerFactory())

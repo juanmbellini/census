@@ -46,13 +46,13 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
 
 
     @Override
-    public Map<K, V> perform(List<Citizen> citizens) {
+    public Map<K, V> perform(List<Citizen> citizens, QueryParamsContainer queryParams) {
         final JobTracker tracker = hazelcastInstance.getJobTracker(hazelcastInstance.getName());
         final IMap<Long, Citizen> hazelcastMap = toHazelcastIMap(citizens);
         final KeyValueSource<Long, Citizen> source = KeyValueSource.fromMap(hazelcastMap);
         final Job<Long, Citizen> job = tracker.newJob(source);
         try {
-            return perform(job);
+            return perform(job, queryParams);
         } catch (ExecutionException | InterruptedException e) {
             LOGGER.error("Could not perform query. Exception message: {}", e.getMessage());
             LOGGER.debug("Exception stacktrace: ", e);
@@ -66,7 +66,8 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
      * @param job The Map/Reduce job used to perform the query.
      * @return A {@link Map} holding the query results.
      */
-    protected abstract Map<K, V> perform(Job<Long, Citizen> job) throws ExecutionException, InterruptedException;
+    protected abstract Map<K, V> perform(Job<Long, Citizen> job, QueryParamsContainer queryParams)
+            throws ExecutionException, InterruptedException;
 
 
     /**

@@ -6,6 +6,7 @@ import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.client.io.cli.InputParams;
 import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
 import ar.edu.itba.pod.census.client.query.HazelcastQueryCreator;
+import ar.edu.itba.pod.census.client.query.Query;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -40,24 +41,28 @@ public class Client {
 
         // Get program arguments
         LOGGER.info("Reading program arguments");
-        final InputParams inputParams = new InputParams();
+        final InputParams params = new InputParams();
         LOGGER.info("Finished reading program arguments");
-        LOGGER.debug("Program arguments are: {}", inputParams);
+        LOGGER.debug("Program arguments are: {}", params);
 
         // Create the already configured hazelcast instance
         LOGGER.info("Creating Hazelcast instance");
-        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses());
+        final HazelcastInstance hazelcastClient = createHazelcastClient(params.getAddresses());
         LOGGER.info("Finished creating Hazelcast instance");
 
         // Read data once Hazelcast instance is created
         LOGGER.info("Reading data file");
-        final List<Citizen> citizens = StreamsCensusReader.readCitizens(inputParams.getDataFilePath());
+        final List<Citizen> citizens = StreamsCensusReader.readCitizens(params.getDataFilePath());
         LOGGER.info("Finished reading data file");
 
-        final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(inputParams.getQueryId())
+        LOGGER.info("Starting query task...");
+        final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
+        final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
                 .createHazelcastQuery(hazelcastClient)
-                .perform(citizens);
+                .perform(citizens, queryParams);
+        LOGGER.info("Finished query task");
 
+        LOGGER.info("Printing results...");
         System.out.println("With hazelcast...");
         result.forEach((region, count) -> System.out.println(region + ": " + count));
 
@@ -66,6 +71,7 @@ public class Client {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         System.out.println("With Java8...");
         java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
+        LOGGER.info("Finished printing results");
 
     }
 
