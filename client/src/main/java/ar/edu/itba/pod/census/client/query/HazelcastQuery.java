@@ -3,6 +3,9 @@ package ar.edu.itba.pod.census.client.query;
 import ar.edu.itba.pod.census.api.models.Citizen;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 import com.hazelcast.util.UuidUtil;
 
 import java.util.*;
@@ -36,16 +39,20 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
 
     @Override
     public Map<K, V> perform(List<Citizen> citizens) {
-        return perform(toHazelcastIMap(citizens));
+        final JobTracker tracker = hazelcastInstance.getJobTracker(hazelcastInstance.getName());
+        final KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(toHazelcastIMap(citizens));
+        final Job<String, Citizen> job = tracker.newJob(source);
+
+        return perform(job);
     }
 
     /**
      * Method that actually performs the query.
      *
-     * @param citizensIMap The {@link IMap} holding the {@link Citizen} data to be processed.
+     * @param job The Map/Reduce job used to perform the query.
      * @return A {@link Map} holding the query results.
      */
-    protected abstract Map<K, V> perform(IMap<String, Citizen> citizensIMap);
+    protected abstract Map<K, V> perform(Job<String, Citizen> job);
 
 
     /**
@@ -58,7 +65,6 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
     private IMap<String, Citizen> toHazelcastIMap(List<Citizen> citizens) {
         final IMap<String, Citizen> hazelcastMap = hazelcastInstance.getMap(hazelcastInstance.getName());
         return citizens.stream().collect(new ToIMapCollector<>(UuidUtil::newSecureUuidString, hazelcastMap));
-
     }
 
     /**
@@ -120,5 +126,4 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
             return Collections.singleton(Characteristics.CONCURRENT);
         }
     }
-
 }
