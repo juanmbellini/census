@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Data readed using Java 8 Streams.
@@ -22,7 +24,9 @@ public class StreamsCensusReader {
      */
     public static List<Citizen> readCitizens(final String fileName) throws IOException {
 
-        return Files.lines(Paths.get(fileName))
+        // Using Stream.of(Object) encapsulates the File.lines() stream in a closable Stream
+        return Stream.of(Files.lines(Paths.get(fileName)))
+                .flatMap(Function.identity())
                 .map(csvLine -> csvLine.split(","))
                 .map(values -> new Citizen(Integer.valueOf(values[0]), Long.valueOf(values[1]), values[2], values[3]))
                 .collect(Collectors.toList());
