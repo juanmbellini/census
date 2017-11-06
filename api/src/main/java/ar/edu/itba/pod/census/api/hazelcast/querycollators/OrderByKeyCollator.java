@@ -3,15 +3,13 @@ package ar.edu.itba.pod.census.api.hazelcast.querycollators;
 import com.hazelcast.mapreduce.Collator;
 
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
- * {@link Collator} class that orders by key in an {@link java.util.Map.Entry}.
+ * {@link Collator} class that orders by key in an {@link java.util.Map.Entry}
+ * using the natural order of the keys.
  */
-public final class OrderByKeyCollator<K extends Comparable<? super K>, V>
+public class OrderByKeyCollator<K extends Comparable<? super K>, V> extends OrderByCollator<K, V>
         implements Collator<Map.Entry<K, V>, Map<K, V>> {
 
     /**
@@ -29,10 +27,7 @@ public final class OrderByKeyCollator<K extends Comparable<? super K>, V>
     }
 
     @Override
-    public Map<K, V> collate(Iterable<Map.Entry<K, V>> entries) {
-        return StreamSupport.stream(entries.spliterator(), false)
-                .sorted(Map.Entry.comparingByKey(ascOrDescComparator))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (m1, m2) -> m1, LinkedHashMap::new));
+    protected Comparator<Map.Entry<K, V>> getComparator() {
+        return Map.Entry.comparingByKey(ascOrDescComparator);
     }
 }
