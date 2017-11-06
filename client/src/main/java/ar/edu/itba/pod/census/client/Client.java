@@ -59,38 +59,38 @@ public class Client {
         // TODO: get query and perform it...
 
 
-        // Generar el tipo de mapa en base a la query y cargarlo
-        IMap<String, String> map = hazelcastClient.getMap("data");
-
-        LOGGER.info("Loading map");
-        //___________________________________
-        for (int i = 0; i < 1000; i++) {
-            LOGGER.info("Loading map {}", i);
-            map.put(String.valueOf(i), "Región Buenos Aires");
-        }
-        //___________________________________
-        LOGGER.info("Map loaded");
-
-        JobTracker tracker = hazelcastClient.getJobTracker("default");
-        LOGGER.info("Tracker loaded");
-
-        KeyValueSource<String, String> source = KeyValueSource.fromMap(map);
-        LOGGER.info("Source loaded");
-
-        Job<String, String> job = tracker.newJob(source);
-        LOGGER.info("Job generated");
-
-
-        try {
-            Map<String, Long> result = new Query1().execute(job);
-            LOGGER.info("Results obtained: {}", result.size());
-
-            for (Map.Entry<String, Long> entry : result.entrySet()) {
-                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue());
-            }
-        } catch (Exception e) {
-            LOGGER.info("BOOOOOOOOOOOOOOOOOOOOOOOOOOM");
-        }
+//        // Generar el tipo de mapa en base a la query y cargarlo
+//        IMap<String, String> map = hazelcastClient.getMap("data");
+//
+//        LOGGER.info("Loading map");
+//        //___________________________________
+//        for (int i = 0; i < 1000; i++) {
+//            LOGGER.info("Loading map {}", i);
+//            map.put(String.valueOf(i), "Región Buenos Aires");
+//        }
+//        //___________________________________
+//        LOGGER.info("Map loaded");
+//
+//        JobTracker tracker = hazelcastClient.getJobTracker("default");
+//        LOGGER.info("Tracker loaded");
+//
+//        KeyValueSource<String, String> source = KeyValueSource.fromMap(map);
+//        LOGGER.info("Source loaded");
+//
+//        Job<String, String> job = tracker.newJob(source);
+//        LOGGER.info("Job generated");
+//
+//
+//        try {
+//            Map<String, Long> result = new Query1().execute(job);
+//            LOGGER.info("Results obtained: {}", result.size());
+//
+//            for (Map.Entry<String, Long> entry : result.entrySet()) {
+//                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue());
+//            }
+//        } catch (Exception e) {
+//            LOGGER.info("BOOOOOOOOOOOOOOOOOOOOOOOOOOM");
+//        }
     }
 
     /**
