@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.census.client;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
+import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.api.serialization.CitizenSerializer;
 import ar.edu.itba.pod.census.client.io.cli.InputParams;
 import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
@@ -12,16 +13,14 @@ import com.hazelcast.config.GroupConfig;
 import com.hazelcast.config.SerializationConfig;
 import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Client {
     private final static Logger LOGGER = LoggerFactory.getLogger(Client.class);
@@ -55,42 +54,18 @@ public class Client {
         final List<Citizen> citizens = StreamsCensusReader.readCitizens(inputParams.getDataFilePath());
         LOGGER.info("Finished reading data file");
 
+        final Map<Region, Long> result = new Query1(hazelcastClient).perform(citizens);
 
-        // TODO: get query and perform it...
+        System.out.println("With hazelcast...");
+        result.forEach((region, count) -> System.out.println(region + ": " + count));
 
+        // Compare results with Java8 streams... TODO: remove this
+        Map<Region, Long> java8Result = citizens.stream().map(Citizen::getRegion)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        System.out.println("With Java8...");
+        java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
 
-//        // Generar el tipo de mapa en base a la query y cargarlo
-//        IMap<String, String> map = hazelcastClient.getMap("data");
-//
-//        LOGGER.info("Loading map");
-//        //___________________________________
-//        for (int i = 0; i < 1000; i++) {
-//            LOGGER.info("Loading map {}", i);
-//            map.put(String.valueOf(i), "Región Buenos Aires");
-//        }
-//        //___________________________________
-//        LOGGER.info("Map loaded");
-//
-//        JobTracker tracker = hazelcastClient.getJobTracker("default");
-//        LOGGER.info("Tracker loaded");
-//
-//        KeyValueSource<String, String> source = KeyValueSource.fromMap(map);
-//        LOGGER.info("Source loaded");
-//
-//        Job<String, String> job = tracker.newJob(source);
-//        LOGGER.info("Job generated");
-//
-//
-//        try {
-//            Map<String, Long> result = new Query1().execute(job);
-//            LOGGER.info("Results obtained: {}", result.size());
-//
-//            for (Map.Entry<String, Long> entry : result.entrySet()) {
-//                LOGGER.info("Query 1: " + entry.getKey() + " - " + entry.getValue());
-//            }
-//        } catch (Exception e) {
-//            LOGGER.info("BOOOOOOOOOOOOOOOOOOOOOOOOOOM");
-//        }
+        // TODO: get query from a repository or enum
     }
 
     /**
