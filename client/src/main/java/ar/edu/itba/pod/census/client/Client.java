@@ -5,7 +5,7 @@ import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.client.io.cli.InputParams;
 import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
-import ar.edu.itba.pod.census.client.query.Query1;
+import ar.edu.itba.pod.census.client.query.HazelcastQueryCreator;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -54,7 +54,9 @@ public class Client {
         final List<Citizen> citizens = StreamsCensusReader.readCitizens(inputParams.getDataFilePath());
         LOGGER.info("Finished reading data file");
 
-        final Map<Region, Long> result = new Query1(hazelcastClient).perform(citizens);
+        final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(inputParams.getQueryId())
+                .createHazelcastQuery(hazelcastClient)
+                .perform(citizens);
 
         System.out.println("With hazelcast...");
         result.forEach((region, count) -> System.out.println(region + ": " + count));
@@ -65,7 +67,6 @@ public class Client {
         System.out.println("With Java8...");
         java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
 
-        // TODO: get query from a repository or enum
     }
 
     /**
