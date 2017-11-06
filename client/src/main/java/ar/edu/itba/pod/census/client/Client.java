@@ -3,6 +3,7 @@ package ar.edu.itba.pod.census.client;
 import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.serialization.CitizenSerializer;
 import ar.edu.itba.pod.census.client.io.cli.InputParams;
+import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
 import ar.edu.itba.pod.census.client.query.Query1;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
@@ -18,19 +19,45 @@ import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class Client {
     private final static Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
-    public static void main(String[] args) {
-        LOGGER.info("census Client Starting ...");
+    /**
+     * Name to be used for the Hazelcast cluster and maps.
+     */
+    private final static String NAME = "52056-55027-55431-55564";
+
+    /**
+     * Fake password for the Hazelcast group.
+     */
+    private final static String FAKE_PASSWORD = "password";
+
+    public static void main(String[] args) throws IOException {
+        LOGGER.info("Census client starting ...");
 
         // Get program arguments
+        LOGGER.info("Reading program arguments");
         final InputParams inputParams = new InputParams();
+        LOGGER.info("Finished reading program arguments");
+        LOGGER.debug("Program arguments are: {}", inputParams);
 
         // Create the already configured hazelcast instance
-        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses(), "dev", "dev-pass");
+        LOGGER.info("Creating Hazelcast instance");
+        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses(), NAME, FAKE_PASSWORD);
+        LOGGER.info("Finished creating Hazelcast instance");
+
+        // Read data once Hazelcast instance is created
+        LOGGER.info("Reading data file");
+        final List<Citizen> citizens = StreamsCensusReader.readCitizens(inputParams.getDataFilePath());
+        LOGGER.info("Finished reading data file");
+
+
+        // TODO: get query and perform it...
+
 
         // Generar el tipo de mapa en base a la query y cargarlo
         IMap<String, String> map = hazelcastClient.getMap("data");
