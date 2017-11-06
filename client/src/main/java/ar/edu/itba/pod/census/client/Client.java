@@ -1,17 +1,14 @@
 package ar.edu.itba.pod.census.client;
 
+import ar.edu.itba.pod.census.api.hazelcast.config.ConfigProvider;
 import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.serialization.CitizenSerializer;
 import ar.edu.itba.pod.census.client.io.cli.InputParams;
 import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
 import ar.edu.itba.pod.census.client.query.Query1;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
-import com.hazelcast.config.GroupConfig;
-import com.hazelcast.config.SerializationConfig;
-import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +19,22 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Client entry point class.
+ */
 public class Client {
+
+    /**
+     * The {@link Logger}
+     */
     private final static Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
     /**
-     * Name to be used for the Hazelcast cluster and maps.
+     * Entry point for client process.
+     *
+     * @param args Program arguments.
+     * @throws IOException If any IO error occurs during program execution.
      */
-    private final static String NAME = "52056-55027-55431-55564";
-
-    /**
-     * Fake password for the Hazelcast group.
-     */
-    private final static String FAKE_PASSWORD = "password";
-
     public static void main(String[] args) throws IOException {
         LOGGER.info("Census client starting ...");
 
@@ -46,7 +46,7 @@ public class Client {
 
         // Create the already configured hazelcast instance
         LOGGER.info("Creating Hazelcast instance");
-        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses(), NAME, FAKE_PASSWORD);
+        final HazelcastInstance hazelcastClient = createHazelcastClient(inputParams.getAddresses());
         LOGGER.info("Finished creating Hazelcast instance");
 
         // Read data once Hazelcast instance is created
@@ -71,38 +71,16 @@ public class Client {
     /**
      * Creates and configures a {@link HazelcastInstance} to be used as a client.
      *
+     * @param addresses Array containing the addresses of member nodes.
      * @return The created and configured {@link HazelcastInstance}.
      */
-    private static HazelcastInstance createHazelcastClient(String[] addresses, String groupName, String groupPassword) {
+    private static HazelcastInstance createHazelcastClient(String[] addresses) {
 
-        // ================================
-        // Serialization config
-        // ================================
-        final SerializationConfig serializationConfig = new SerializationConfig()
-                .addSerializerConfig(new SerializerConfig()
-                        .setImplementation(new CitizenSerializer())
-                        .setTypeClass(Citizen.class));
-
-        // ================================
-        // Networking config
-        // ================================
-        final ClientNetworkConfig networkingConfig = new ClientNetworkConfig()
-                .addAddress(addresses);
-
-        // ================================
-        // Group config
-        // ================================
-        final GroupConfig groupConfig = new GroupConfig()
-                .setName(groupName)
-                .setPassword(groupPassword);
-
-        // ================================
-        // Instance config
-        // ================================
+        // Configuration
         final ClientConfig config = new ClientConfig()
-                .setSerializationConfig(serializationConfig)
-                .setNetworkConfig(networkingConfig)
-                .setGroupConfig(groupConfig);
+                .setSerializationConfig(ConfigProvider.createSerializationConfig())
+                .setGroupConfig(ConfigProvider.createGroupConfig())
+                .setNetworkConfig(new ClientNetworkConfig().addAddress(addresses));
 
         // Create the Hazelcast Client using the specified configuration
         return HazelcastClient.newHazelcastClient(config);
