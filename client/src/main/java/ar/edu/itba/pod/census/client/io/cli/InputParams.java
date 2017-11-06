@@ -36,17 +36,17 @@ public class InputParams {
     // =======================================
     // Execution arguments
     // =======================================
-    @SystemProperty(value = "query")
+    @SystemProperty(value = "query", defaultValue = "1")
     private int queryId;
 
     // =======================================
     // Query param arguments
     // =======================================
 
-    @SystemProperty(value = "n")
+    @SystemProperty(value = "n", defaultValue= "10")
     private Integer n;
 
-    @SystemProperty(value = "prov")
+    @SystemProperty(value = "prov", defaultValue = "Santa Fe")
     private String prov;
 
 
