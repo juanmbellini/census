@@ -6,9 +6,12 @@ import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
-import com.hazelcast.util.UuidUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -22,6 +25,11 @@ import java.util.stream.Collector;
  * @param <V> The type of the value of the resulting map of the query.
  */
 public abstract class HazelcastQuery<K, V> implements Query<K, V> {
+
+    /**
+     * The {@link Logger}.
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(HazelcastQuery.class);
 
     /**
      * The {@link HazelcastInstance} to be used to perform queries.
@@ -38,12 +46,18 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
 
 
     @Override
-    public Map<K, V> perform(List<Citizen> citizens) {
+    public Map<K, V> perform(List<Citizen> citizens, QueryParamsContainer queryParams) {
         final JobTracker tracker = hazelcastInstance.getJobTracker(hazelcastInstance.getName());
-        final KeyValueSource<String, Citizen> source = KeyValueSource.fromMap(toHazelcastIMap(citizens));
-        final Job<String, Citizen> job = tracker.newJob(source);
-
-        return perform(job);
+        final IMap<Long, Citizen> hazelcastMap = toHazelcastIMap(citizens);
+        final KeyValueSource<Long, Citizen> source = KeyValueSource.fromMap(hazelcastMap);
+        final Job<Long, Citizen> job = tracker.newJob(source);
+        try {
+            return perform(job, queryParams);
+        } catch (ExecutionException | InterruptedException e) {
+            LOGGER.error("Could not perform query. Exception message: {}", e.getMessage());
+            LOGGER.debug("Exception stacktrace: ", e);
+            throw new RuntimeException(); // TODO: define custom exception?
+        }
     }
 
     /**
@@ -52,7 +66,8 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
      * @param job The Map/Reduce job used to perform the query.
      * @return A {@link Map} holding the query results.
      */
-    protected abstract Map<K, V> perform(Job<String, Citizen> job);
+    protected abstract Map<K, V> perform(Job<Long, Citizen> job, QueryParamsContainer queryParams)
+            throws ExecutionException, InterruptedException;
 
 
     /**
@@ -62,9 +77,12 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
      * @param citizens The {@link List} of {@link Citizen} to be transformed.
      * @return The generated {@link IMap}.
      */
-    private IMap<String, Citizen> toHazelcastIMap(List<Citizen> citizens) {
-        final IMap<String, Citizen> hazelcastMap = hazelcastInstance.getMap(hazelcastInstance.getName());
-        return citizens.stream().collect(new ToIMapCollector<>(UuidUtil::newSecureUuidString, hazelcastMap));
+    private synchronized IMap<Long, Citizen> toHazelcastIMap(List<Citizen> citizens) {
+        final IMap<Long, Citizen> hazelcastMap = hazelcastInstance.getMap(hazelcastInstance.getName());
+        hazelcastMap.clear(); // Must clear remote map
+        return citizens.stream()
+                .parallel() // TODO: check if necessary
+                .collect(new ToIMapCollector<>(() -> new SecureRandom().nextLong(), hazelcastMap, citizens.size()));
     }
 
     /**
@@ -85,14 +103,23 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         private final IMap<T, Citizen> iMap;
 
         /**
+         * The size the final map must have before inserting all into the {@link IMap}.
+         * Used to validate that all input data was collected.
+         */
+        private final long mustHaveSize;
+
+        /**
          * Constructor.
          *
          * @param keyGenerator A {@link Supplier} of keys for the resultant {@link IMap}. Must be concurrent.
          * @param iMap         The resultant {@link IMap} to which input data will be saved into.
+         * @param mustHaveSize The size the final map must have before inserting all into the {@link IMap}.
+         *                     Used to validate that all input data was collected.
          */
-        private ToIMapCollector(Supplier<T> keyGenerator, IMap<T, Citizen> iMap) {
+        private ToIMapCollector(Supplier<T> keyGenerator, IMap<T, Citizen> iMap, long mustHaveSize) {
             this.keyGenerator = keyGenerator;
             this.iMap = iMap;
+            this.mustHaveSize = mustHaveSize;
         }
 
         @Override
@@ -116,6 +143,9 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         @Override
         public Function<Map<T, Citizen>, IMap<T, Citizen>> finisher() {
             return map -> {
+                if (map.size() != mustHaveSize) {
+                    throw new IllegalStateException("Could not collect into IMap all input data to be processed");
+                }
                 iMap.putAll(map);
                 return iMap;
             };
