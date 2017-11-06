@@ -78,6 +78,12 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
          */
         private final IMap<T, Citizen> iMap;
 
+        /**
+         * Constructor.
+         *
+         * @param keyGenerator A {@link Supplier} of keys for the resultant {@link IMap}. Must be concurrent.
+         * @param iMap         The resultant {@link IMap} to which input data will be saved into.
+         */
         private ToIMapCollector(Supplier<T> keyGenerator, IMap<T, Citizen> iMap) {
             this.keyGenerator = keyGenerator;
             this.iMap = iMap;
