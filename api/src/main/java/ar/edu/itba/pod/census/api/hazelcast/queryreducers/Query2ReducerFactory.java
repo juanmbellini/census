@@ -4,7 +4,7 @@ import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
 /**
- * {@link ReducerFactory} for the query 1
+ * {@link ReducerFactory} for the query 2
  * (i.e returns a {@link Reducer} that counts input that was produced by
  * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.UnitCounterCombiner}, which is returned by
  * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query1CombinerFactory}).
