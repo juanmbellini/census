@@ -55,7 +55,7 @@ public class Client {
         final List<Citizen> citizens = StreamsCensusReader.readCitizens(params.getDataFilePath());
         LOGGER.info("Finished reading data file");
 
-        LOGGER.info("Starting query task...");
+        LOGGER.info("Starting query {} task...", params.getQueryId());
         final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
         final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
                 .createHazelcastQuery(hazelcastClient)
@@ -64,13 +64,15 @@ public class Client {
 
         LOGGER.info("Printing results...");
         System.out.println("With hazelcast...");
-        result.forEach((region, count) -> System.out.println(region + ": " + count));
+        System.out.println(result);
+        
+//        result.forEach((region, count) -> System.out.println(region + ": " + count));
 
         // Compare results with Java8 streams... TODO: remove this
-        Map<Region, Long> java8Result = citizens.stream().map(Citizen::getRegion)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        System.out.println("With Java8...");
-        java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
+//        Map<Region, Long> java8Result = citizens.stream().map(Citizen::getRegion)
+//                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+//        System.out.println("With Java8...");
+//        java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
         LOGGER.info("Finished printing results");
 
     }
