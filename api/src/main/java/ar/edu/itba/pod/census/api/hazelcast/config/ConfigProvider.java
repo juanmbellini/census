@@ -50,7 +50,7 @@ public class ConfigProvider {
                         .setTypeClass(StringSet.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new StringPairSerializer())
-                        .setTypeClass(StringPair.class));
+                        .setTypeClass(StringPair.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new IntegerSetSerializer())
                         .setTypeClass(IntegerSet.class))
