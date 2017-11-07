@@ -1,8 +1,5 @@
 package ar.edu.itba.pod.census.client.io.output;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,14 +11,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * Helper class to be used to write the results obtained from a {@link ar.edu.itba.pod.census.client.query.Query}.
+ * Helper class to be used to write stuff (results and timestamps).
  */
 public class OutputWriter {
-
-    /**
-     * The {@link Logger}.
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(OutputWriter.class);
 
     /**
      * Prints the given {@code results} into the standard output (i.e stdout).
