@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.census.client.query;
 
+import ar.edu.itba.pod.census.api.util.StringPair;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.mapreduce.Job;
 
@@ -41,6 +42,13 @@ public enum HazelcastQueryCreator {
         @Override
         public HazelcastQuery<String, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query6(hazelcastInstance);
+        }
+    },
+    
+    QUERY_7(7) {
+        @Override
+        public HazelcastQuery<StringPair, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+            return new Query7(hazelcastInstance);
         }
     };
 
@@ -87,7 +95,8 @@ public enum HazelcastQueryCreator {
             QUERY_3,
             null,
             QUERY_5,
-            QUERY_6
+            QUERY_6,
+            QUERY_7
     };
 
     /**
