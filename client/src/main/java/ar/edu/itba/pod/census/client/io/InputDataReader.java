@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.client.io.input;
+package ar.edu.itba.pod.census.client.io;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
 
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Data readed using Java 8 Streams.
+ * Data reader using Java 8 Streams.
  */
-public class StreamsCensusReader {
+public class InputDataReader {
 
     /**
      * Reads a file containing citizens data.

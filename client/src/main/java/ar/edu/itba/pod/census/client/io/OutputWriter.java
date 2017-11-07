@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.client.io.output;
+package ar.edu.itba.pod.census.client.io;
 
 import java.io.File;
 import java.io.FileOutputStream;

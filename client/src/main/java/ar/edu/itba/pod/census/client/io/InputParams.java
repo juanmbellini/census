@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.census.client.io.cli;
+package ar.edu.itba.pod.census.client.io;
 
 import org.jeasy.props.PropertiesInjectorBuilder;
 import org.jeasy.props.annotations.SystemProperty;

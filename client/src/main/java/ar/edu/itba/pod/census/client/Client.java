@@ -2,9 +2,9 @@ package ar.edu.itba.pod.census.client;
 
 import ar.edu.itba.pod.census.api.hazelcast.config.ConfigProvider;
 import ar.edu.itba.pod.census.api.models.Citizen;
-import ar.edu.itba.pod.census.client.io.cli.InputParams;
-import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
-import ar.edu.itba.pod.census.client.io.output.OutputWriter;
+import ar.edu.itba.pod.census.client.io.InputDataReader;
+import ar.edu.itba.pod.census.client.io.InputParams;
+import ar.edu.itba.pod.census.client.io.OutputWriter;
 import ar.edu.itba.pod.census.client.query.HazelcastQueryCreator;
 import ar.edu.itba.pod.census.client.query.Query;
 import com.hazelcast.client.HazelcastClient;
@@ -54,7 +54,7 @@ public class Client {
         // Read data once Hazelcast instance is created
         LOGGER.info("Reading data file");
         final LocalDateTime startingReading = LocalDateTime.now();
-        final List<Citizen> citizens = StreamsCensusReader.readCitizens(params.getDataFilePath());
+        final List<Citizen> citizens = InputDataReader.readCitizens(params.getDataFilePath());
         final LocalDateTime finishedReading = LocalDateTime.now();
         LOGGER.info("Finished reading data file");
 
