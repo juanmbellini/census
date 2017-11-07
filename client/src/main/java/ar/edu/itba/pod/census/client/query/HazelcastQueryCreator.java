@@ -28,6 +28,13 @@ public enum HazelcastQueryCreator {
         public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query3(hazelcastInstance);
         }
+    },
+    
+    QUERY_5(5) {
+        @Override
+        public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+            return new Query5(hazelcastInstance);
+        }
     };
 
     /**
@@ -70,7 +77,9 @@ public enum HazelcastQueryCreator {
     private static final HazelcastQueryCreator[] valuesByQueryId = {
             QUERY_1,
             QUERY_2,
-            QUERY_3
+            QUERY_3,
+            null,
+            QUERY_5
     };
 
     /**

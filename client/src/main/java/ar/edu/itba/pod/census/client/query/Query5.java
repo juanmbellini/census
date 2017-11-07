@@ -1,5 +1,7 @@
 package ar.edu.itba.pod.census.client.query;
 
+import ar.edu.itba.pod.census.api.hazelcast.querycollators.OrderByValueCollator;
+import ar.edu.itba.pod.census.api.hazelcast.querycollators.SortDirection;
 import ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query3CombinerFactory;
 import ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query5CombinerFactory;
 import ar.edu.itba.pod.census.api.hazelcast.querymappers.Query3Mapper;
@@ -29,7 +31,7 @@ public class Query5 extends HazelcastQuery<Region, Double> {
         return job.mapper(new Query5Mapper<>())
                 .combiner(new Query5CombinerFactory())
                 .reducer(new Query5ReducerFactory())
-                .submit()
+                .submit(new OrderByValueCollator<>(SortDirection.DESC))
                 .get();
     }
 }
