@@ -29,6 +29,13 @@ public enum HazelcastQueryCreator {
             return new Query3(hazelcastInstance);
         }
     },
+
+    QUERY_4(4){
+        @Override
+        public HazelcastQuery<Region, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+            return new Query4(hazelcastInstance);
+        }
+    },
     
     QUERY_5(5) {
         @Override
@@ -78,7 +85,7 @@ public enum HazelcastQueryCreator {
             QUERY_1,
             QUERY_2,
             QUERY_3,
-            null,
+            QUERY_4,
             QUERY_5
     };
 
