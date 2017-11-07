@@ -51,8 +51,6 @@ public class InputParams {
      */
     public InputParams() {
         PropertiesInjectorBuilder.aNewPropertiesInjector().injectProperties(this);
-
-        // TODO: validate arguments
     }
 
     /**

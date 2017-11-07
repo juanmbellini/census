@@ -27,6 +27,9 @@ public class Query6 extends HazelcastQuery<String, Long> {
     @Override
     protected Map<String, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
             throws ExecutionException, InterruptedException {
+        if (params.getN() == null) {
+            throw new IllegalArgumentException("The n query param must be specified for query 6");
+        }
         return job.mapper(new Query6Mapper<>())
                 .combiner(new Query6CombinerFactory())
                 .reducer(new Query6ReducerFactory())

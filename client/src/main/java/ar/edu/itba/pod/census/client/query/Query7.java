@@ -17,19 +17,19 @@ import java.util.concurrent.ExecutionException;
  */
 public class Query7 extends HazelcastQuery<StringPair, Long> {
 
-    private HazelcastInstance hazelcastInstance;
-
     /**
      * @param hazelcastInstance The {@link HazelcastInstance} from which the {@link Job} is constructed.
      */
     public Query7(HazelcastInstance hazelcastInstance) {
         super(hazelcastInstance);
-        this.hazelcastInstance = hazelcastInstance;
     }
 
     @Override
-    protected Map<StringPair, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params) throws ExecutionException, InterruptedException {
-
+    protected Map<StringPair, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
+            throws ExecutionException, InterruptedException {
+        if (params.getN() == null) {
+            throw new IllegalArgumentException("The n query param must be specified for query 7");
+        }
         return job.mapper(new Query7Mapper<>())
 //				.combiner(new Query7CombinerFactory())
                 .reducer(new Query7ReducerFactory())
