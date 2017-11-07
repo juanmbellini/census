@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.UnitCounterCombiner}, which is returned by
  * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query1CombinerFactory}).
  */
-public class Query5ReducerFactory implements ReducerFactory<Region, Double, Double> {
+public class Query5ReducerFactory implements ReducerFactory<Region, IntegerPair, Double> {
 
     /**
      * Used for serialization of this {@link ReducerFactory}.
@@ -23,27 +23,27 @@ public class Query5ReducerFactory implements ReducerFactory<Region, Double, Doub
     private final static Logger LOGGER = LoggerFactory.getLogger(Query5ReducerFactory.class);
     
     @Override
-    public Reducer<Double, Double> newReducer(final Region region) {
+    public Reducer<IntegerPair, Double> newReducer(final Region region) {
         LOGGER.trace("instantiating reducer");
-        return new Reducer<Double, Double>() {
+        return new Reducer<IntegerPair, Double>() {
             
             private int count;
-            private double accum;
+            private int homes;
             
             @Override
-            public void reduce(Double average) {
+            public void reduce(IntegerPair pair) {
 //                LOGGER.trace("reducing {}", workingHomelessPair);
-                count++;
-                accum += average;
+                count += pair.getRight();
+                homes += pair.getLeft();
             }
     
             @Override
             public Double finalizeReduce() {
 //                LOGGER.trace("finalize reduce {} {}/{}", region.getName(), homeless, working);
-                if (count == 0) {
+                if (homes == 0) {
                     return 0.0;
                 }
-                return accum / count;
+                return (double)count / homes;
             }
         };
     }

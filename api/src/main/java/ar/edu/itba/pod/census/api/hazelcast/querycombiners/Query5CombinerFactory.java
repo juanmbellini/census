@@ -17,7 +17,7 @@ import java.util.Set;
  * {@link CombinerFactory} for the query 5
  * (i.e returns a {@link Combiner} that count elements of the same department name).
  */
-public class Query5CombinerFactory implements CombinerFactory<Region, Long, Double> {
+public class Query5CombinerFactory implements CombinerFactory<Region, Long, IntegerPair> {
     
     private final static Logger LOGGER = LoggerFactory.getLogger(Query5CombinerFactory.class);
     
@@ -27,9 +27,9 @@ public class Query5CombinerFactory implements CombinerFactory<Region, Long, Doub
     private static final long serialVersionUID = 1L;
     
     @Override
-    public Combiner<Long, Double> newCombiner(Region region) {
+    public Combiner<Long, IntegerPair> newCombiner(Region region) {
         LOGGER.trace("instantiating combiner");
-        return new Combiner<Long, Double>() {
+        return new Combiner<Long, IntegerPair>() {
             
             private final Set<Long> homes = new HashSet<>();
             private int count;
@@ -42,9 +42,9 @@ public class Query5CombinerFactory implements CombinerFactory<Region, Long, Doub
             }
     
             @Override
-            public Double finalizeChunk() {
+            public IntegerPair finalizeChunk() {
 //                LOGGER.trace("finalize chunk {}/{}", working, homeless);
-                return (double)count / homes.size();
+                return new IntegerPair(homes.size(), count);
             }
         };
     }
