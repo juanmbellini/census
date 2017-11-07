@@ -11,34 +11,47 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+/**
+ * {@link Collator} class in charge of getting the top N elements.
+ *
+ * @param <T> The concrete type of element that will be processed by this collator.
+ */
 public class TopNCollator<T> implements Collator<Entry<T, Long>, Map<T, Long>> {
 
-	/**
-   * The {@link Logger}.
-   */
-  private final static Logger LOGGER = LoggerFactory.getLogger(TopNCollator.class);
+    /**
+     * The {@link Logger}.
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(TopNCollator.class);
 
-	private Integer n;
+    /**
+     * The number indicating the top.
+     */
+    private Integer n;
 
-	public TopNCollator(final Integer n) {
-		this.n = n;
-	}
+    /**
+     * Constructor.
+     *
+     * @param n The number indicating the top.
+     */
+    public TopNCollator(final Integer n) {
+        this.n = n;
+    }
 
-	@Override
-	public Map<T, Long> collate(Iterable<Entry<T, Long>> arg0) {
+    @Override
+    public Map<T, Long> collate(Iterable<Entry<T, Long>> arg0) {
 
-		LOGGER.info("Running collator");
+        LOGGER.info("Running collator");
 
-		final Map<T, Long> m = new HashMap<>();
+        final Map<T, Long> m = new HashMap<>();
 
-		for (Entry<T, Long> e : arg0) {
-			m.put(e.getKey(), e.getValue());
-		}
+        for (Entry<T, Long> e : arg0) {
+            m.put(e.getKey(), e.getValue());
+        }
 
-		return m.entrySet().stream()
-        .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-        .limit(this.n)
-        .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-	}
+        return m.entrySet().stream()
+                .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(this.n)
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+    }
 
 }
