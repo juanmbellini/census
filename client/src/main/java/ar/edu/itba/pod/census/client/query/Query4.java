@@ -31,4 +31,5 @@ public class Query4 extends HazelcastQuery<Region, Long> {
 
         return result;
     }
+
 }
