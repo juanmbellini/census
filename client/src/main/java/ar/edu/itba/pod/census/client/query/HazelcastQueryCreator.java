@@ -1,10 +1,9 @@
 package ar.edu.itba.pod.census.client.query;
 
+import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.api.util.StringPair;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.mapreduce.Job;
-
-import ar.edu.itba.pod.census.api.models.Region;
 
 /**
  * Enum holding values that represent all the {@link HazelcastQuery} supported by the system.
@@ -16,42 +15,42 @@ public enum HazelcastQueryCreator {
             return new Query1(hazelcastInstance);
         }
     },
-	
-	  QUERY_2(2) {
+
+    QUERY_2(2) {
         @Override
         public HazelcastQuery<String, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query2(hazelcastInstance);
         }
     },
-	  
-	  QUERY_3(3) {
+
+    QUERY_3(3) {
         @Override
         public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query3(hazelcastInstance);
         }
     },
 
-    QUERY_4(4){
+    QUERY_4(4) {
         @Override
         public HazelcastQuery<Region, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query4(hazelcastInstance);
         }
     },
-    
+
     QUERY_5(5) {
         @Override
         public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query5(hazelcastInstance);
         }
     },
-    
+
     QUERY_6(6) {
         @Override
         public HazelcastQuery<String, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query6(hazelcastInstance);
         }
     },
-    
+
     QUERY_7(7) {
         @Override
         public HazelcastQuery<StringPair, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
@@ -113,6 +112,9 @@ public enum HazelcastQueryCreator {
      * @return The value the given {@code queryId} represents.
      */
     public static HazelcastQueryCreator getCreatorByQueryId(int queryId) {
+        if (queryId < 1 || queryId > valuesByQueryId.length) {
+            throw new IllegalArgumentException("Unknown query id");
+        }
         return valuesByQueryId[queryId - 1]; // Query ids are 1-indexed, but the array is 0-indexed.
     }
 }
