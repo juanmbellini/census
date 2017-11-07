@@ -117,7 +117,7 @@ public class OutputWriter {
         final File file = new File(path);
         final File parent = file.getParentFile();
         // Create directory structure if it not exists
-        if (!parent.exists() && !parent.mkdirs()) {
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException(); // Throw IOException in case the dir structure could not be created
         }
         if (!file.exists() && !file.createNewFile()) {
@@ -149,7 +149,7 @@ public class OutputWriter {
      * @param stream     The {@link PrintStream} to which the {@code timestamps} are going to be written.
      */
     private static void writeTimestamps(Map<LocalDateTime, String> timestamps, PrintStream stream) {
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss:xxxx");
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSS");
         timestamps.entrySet().stream()
                 .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey().format(dateTimeFormatter), entry.getValue()))
                 .forEach(entry -> stream.println(entry.getKey() + " - " + entry.getValue()));
