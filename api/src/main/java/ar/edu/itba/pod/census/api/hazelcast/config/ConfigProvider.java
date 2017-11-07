@@ -59,6 +59,9 @@ public class ConfigProvider {
                         .setTypeClass(LongSet.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new ProvinceSetSerializer())
-                        .setTypeClass(ProvinceSet.class));
+                        .setTypeClass(ProvinceSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new LongLongSetPairSerializer())
+                        .setTypeClass(LongLongSetPair.class));
     }
 }
