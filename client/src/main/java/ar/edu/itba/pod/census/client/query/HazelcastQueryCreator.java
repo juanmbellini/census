@@ -25,7 +25,7 @@ public enum HazelcastQueryCreator {
 
     QUERY_3(3) {
         @Override
-        public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+        public HazelcastQuery<Region, String> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query3(hazelcastInstance);
         }
     },
@@ -39,7 +39,7 @@ public enum HazelcastQueryCreator {
 
     QUERY_5(5) {
         @Override
-        public HazelcastQuery<Region, Double> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+        public HazelcastQuery<Region, String> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query5(hazelcastInstance);
         }
     },
@@ -53,7 +53,7 @@ public enum HazelcastQueryCreator {
 
     QUERY_7(7) {
         @Override
-        public HazelcastQuery<StringPair, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
+        public HazelcastQuery<String, Long> createHazelcastQuery(HazelcastInstance hazelcastInstance) {
             return new Query7(hazelcastInstance);
         }
     };

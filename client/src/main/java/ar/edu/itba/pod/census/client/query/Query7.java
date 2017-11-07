@@ -8,14 +8,17 @@ import ar.edu.itba.pod.census.api.util.StringPair;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.mapreduce.Job;
 
+import java.util.AbstractMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Class representing the {@link Query} with {@code queryId} 7.
  * Implemented using Hazelcast (it extends {@link HazelcastQuery}).
  */
-public class Query7 extends HazelcastQuery<StringPair, Long> {
+public class Query7 extends HazelcastQuery<String, Long> {
 
     /**
      * @param hazelcastInstance The {@link HazelcastInstance} from which the {@link Job} is constructed.
@@ -25,7 +28,7 @@ public class Query7 extends HazelcastQuery<StringPair, Long> {
     }
 
     @Override
-    protected Map<StringPair, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
+    protected Map<String, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
             throws ExecutionException, InterruptedException {
         if (params.getN() == null) {
             throw new IllegalArgumentException("The n query param must be specified for query 7");
@@ -34,6 +37,12 @@ public class Query7 extends HazelcastQuery<StringPair, Long> {
 //				.combiner(new Query7CombinerFactory())
                 .reducer(new Query7ReducerFactory())
                 .submit(new TopWithMinNCollator<>(params.getN()))
-                .get();
+                .get().entrySet().stream()
+                .map(entry ->
+                        new AbstractMap.SimpleEntry<>(entry.getKey().getLeft() + " + " + entry.getKey().getRight(),
+                                entry.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldV, newV) -> oldV, LinkedHashMap::new))
+                ;
     }
 }
