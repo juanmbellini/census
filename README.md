@@ -104,6 +104,12 @@ Nota: HomeId es Long.
 Nota: Si el reducer recibe <Prov1, Prov2> <Dep, null> significa que el Dep1 corresponde a Prov1 y no a Prov2, en el momento en que reciba <Prov1, Prov2> <null, Dep> se va a contabilizar un departamento en común.
 Nota2: Department es un String
 
+## Decisiones de diseño
+En cuanto a decisiones, en un principio implementó un `QueryExecutor`, cuya implementación contenía un método por cada Query y el mismo recibía los parámetros de entrada, el objeto query a ejecutar, el job tracker de Hazelcast, y realizaba toda la ejecución de la chain del map reduce. Si bien era una implementación que funcionaba, decidimos descartarla y diseñar la implementación anteriormente descrita. El motivo es que dicho implementación es mucho más mantenible y facil de leer a la hora de debbugear. El hecho de tener múltiples métodos que hagan todo en una clase, no sólo es un antipatron y mezcla componentes que no deberían estar juntos, sino que también nos dificultó el debuggeo. Además, la nueva implementación separa los objetos de forma tal en la que es más fácil testear si quisieran implementarse tests.
+
+Además, se pensó una forma más ordenada de cargar los argumentos del programa, pero esta idea se descartó debido a los requerimientos de la cátedra de mantener una uniformidad de argumentos entre grupos.
+
+Finalmente, se decidió cargar tódos los datos del archivo input en memoria, debido a que la carga es rápida (alrededor de 2 segundos), y enviar todo junto a lost nodos servidor (tarda alrededor de 10 segundos en procesar). El motivo de este trade off es que no implica una pérdida de tiempo significativa, y facilita extremadamente la programación, así como ahorra problemas de concurrencia.
 
 ## Authors
 
