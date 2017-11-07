@@ -6,8 +6,6 @@ import ar.edu.itba.pod.census.api.util.BooleanPair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-import java.util.function.Function;
-
 /**
  * {@link Mapper} for the query 3 (i.e transforms those {@link Citizen}s working or homeless
  * into a &lt;{@link Region}, {@link BooleanPair},
@@ -22,6 +20,7 @@ public class Query3Mapper<K> implements Mapper<K, Citizen, Region, BooleanPair> 
      */
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void map(K key, Citizen citizen, Context<Region, BooleanPair> context) {
 
         final Boolean isWorking = citizen.getActivityConditionId() == 1;
@@ -29,12 +28,7 @@ public class Query3Mapper<K> implements Mapper<K, Citizen, Region, BooleanPair> 
 
         // Count citizen only if 'Ocupado' or 'Desocupado'
         if (isWorking || isHomeless) {
-            context.emit(toOutKeyFunction().apply(citizen), new BooleanPair(isWorking, isHomeless));
+            context.emit(citizen.getRegion(), new BooleanPair(isWorking, isHomeless));
         }
     }
-
-    public Function<Citizen, Region> toOutKeyFunction() {
-        return Citizen::getRegion;
-    }
-
 }

@@ -5,8 +5,6 @@ import ar.edu.itba.pod.census.api.models.Region;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-import java.util.function.Function;
-
 /**
  * {@link Mapper} for the query 4 (i.e transforms {@link Citizen} into a &lt;{@link Region},{@code homeId}&gt; pair).
  *
@@ -19,16 +17,8 @@ public class Query4Mapper<K> implements Mapper<K, Citizen, Region, Long> {
      */
     private static final long serialVersionUID = 344329467838L;
 
+    @Override
     public void map(K key, Citizen citizen, Context<Region, Long> context) {
-        context.emit(toOutKeyFunction().apply(citizen), toOutValueFunction().apply(citizen));
-    }
-
-
-    public Function<Citizen, Region> toOutKeyFunction() {
-        return Citizen::getRegion;
-    }
-
-    public Function<Citizen, Long> toOutValueFunction() {
-        return Citizen::getHomeId;
+        context.emit(citizen.getRegion(), citizen.getHomeId());
     }
 }

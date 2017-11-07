@@ -22,7 +22,7 @@ public class Query2Mapper<K> implements CounterByValueInMapper<K, Citizen, Strin
     /**
      * The province name used to filter a {@link Citizen}.
      */
-    private String provinceName;
+    private final String provinceName;
 
     /**
      * @param provinceName The province name used to filter a {@link Citizen}.
