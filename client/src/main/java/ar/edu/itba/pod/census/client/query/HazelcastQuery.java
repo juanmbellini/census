@@ -81,7 +81,7 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         final IMap<Long, Citizen> hazelcastMap = hazelcastInstance.getMap(hazelcastInstance.getName());
         hazelcastMap.clear(); // Must clear remote map
         return citizens.stream()
-                .parallel() // TODO: check if necessary
+                .parallel() // Make it faster
                 .collect(new ToIMapCollector<>(() -> new SecureRandom().nextLong(), hazelcastMap, citizens.size()));
     }
 
