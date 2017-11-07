@@ -2,18 +2,16 @@ package ar.edu.itba.pod.census.api.hazelcast.querymappers;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.util.BooleanPair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
 /**
  * {@link Mapper} for the query 3 (i.e transforms those {@link Citizen}s working or homeless
- * into a &lt;{@link Region}, {@link BooleanPair},
- * which holds the &lt;{@code isWorking}, {@code isHomeless}&gt; data&gt; pair).
+ * into a &lt;{@link Region}, {@link Boolean}&gt; pair, being {@code true}if its working, or {@code false} otherwise).
  *
  * @param <K> The type of the input key.
  */
-public class Query3Mapper<K> implements Mapper<K, Citizen, Region, BooleanPair> {
+public class Query3Mapper<K> implements Mapper<K, Citizen, Region, Boolean> {
 
     /**
      * Used for serialization of this {@link Mapper}.
@@ -21,14 +19,12 @@ public class Query3Mapper<K> implements Mapper<K, Citizen, Region, BooleanPair> 
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void map(K key, Citizen citizen, Context<Region, BooleanPair> context) {
+    public void map(K key, Citizen citizen, Context<Region, Boolean> context) {
 
-        final Boolean isWorking = citizen.getActivityConditionId() == 1;
-        final Boolean isHomeless = citizen.getActivityConditionId() == 2;
-
-        // Count citizen only if 'Ocupado' or 'Desocupado'
-        if (isWorking || isHomeless) {
-            context.emit(citizen.getRegion(), new BooleanPair(isWorking, isHomeless));
+        final int activityConditionId = citizen.getActivityConditionId();
+        // Filter by activityCondition (Occupied or Not occupied)
+        if (activityConditionId == 1 || activityConditionId == 2) {
+            context.emit(citizen.getRegion(), activityConditionId == 1);
         }
     }
 }
