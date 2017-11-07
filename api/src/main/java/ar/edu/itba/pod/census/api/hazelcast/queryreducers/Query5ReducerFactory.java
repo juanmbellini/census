@@ -10,9 +10,9 @@ import java.util.Set;
 
 /**
  * {@link ReducerFactory} for the query 5
- * (i.e returns a {@link Reducer} that counts input that was produced by
- * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.UnitCounterCombiner}, which is returned by
- * the {@link ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query1CombinerFactory}).
+ * (i.e returns a {@link Reducer} that holds homeIds and count {@link ar.edu.itba.pod.census.api.models.Citizen}s
+ * by {@link Region}, and then calculates
+ * the average amount of {@link ar.edu.itba.pod.census.api.models.Citizen} per home of each {@link Region}).
  */
 public class Query5ReducerFactory implements ReducerFactory<Region, LongLongSetPair, Double> {
 

@@ -8,8 +8,11 @@ import com.hazelcast.mapreduce.ReducerFactory;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * {@link ReducerFactory} for the query 4
+ * (i.e returns a {@link Reducer} that holds homeIds by {@link Region}, and then counts).
+ */
 public class Query4ReducerFactory implements ReducerFactory<Region, LongSet, Long> {
-
 
     @Override
     public Reducer<LongSet, Long> newReducer(Region region) {
