@@ -1,17 +1,15 @@
 package ar.edu.itba.pod.census.api.hazelcast.querycombiners;
 
 import ar.edu.itba.pod.census.api.models.Region;
+import ar.edu.itba.pod.census.api.util.LongSet;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * {@link CombinerFactory} for the query 4
  * (i.e returns a {@link Combiner} that count elements of the same department name).
  */
-public class Query4CombinerFactory implements CombinerFactory<Region, Long, Set<Long>> {
+public class Query4CombinerFactory implements CombinerFactory<Region, Long, LongSet> {
 
     /**
      * Used for serialization of this {@link CombinerFactory}.
@@ -20,11 +18,14 @@ public class Query4CombinerFactory implements CombinerFactory<Region, Long, Set<
 
 
     @Override
-    public Combiner<Long, Set<Long>> newCombiner(Region region) {
+    public Combiner<Long, LongSet> newCombiner(Region region) {
 
-        return new Combiner<Long, Set<Long>>() {
+        return new Combiner<Long, LongSet>() {
 
-            private Set<Long> set = new HashSet<>();
+            /**
+             * Contains the homeIds for the actual chunk.
+             */
+            private final LongSet set = new LongSet();
 
             @Override
             public void combine(Long homeId) {
@@ -32,13 +33,14 @@ public class Query4CombinerFactory implements CombinerFactory<Region, Long, Set<
             }
 
             @Override
-            public Set<Long> finalizeChunk() {
-                return set;
+            public LongSet finalizeChunk() {
+                // Send it in a new instance as the one held bu this Combiner will be reset.
+                return new LongSet(set);
             }
 
             @Override
-            public void reset(){
-                this.set = new HashSet<>();
+            public void reset() {
+                set.clear();
             }
         };
     }
