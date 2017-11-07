@@ -21,7 +21,7 @@ public class CountReducer extends Reducer<Long, Long> {
 
     @Override
     public void beginReduce() {
-        LOGGER.debug("Started reducing...");
+        LOGGER.trace("Started reducing...");
         super.beginReduce();
     }
 
@@ -33,7 +33,7 @@ public class CountReducer extends Reducer<Long, Long> {
 
     @Override
     public Long finalizeReduce() {
-        LOGGER.debug("Finished reducing. Final result is {}", this.count);
+        LOGGER.trace("Finished reducing. Final result is {}", this.count);
         return this.count;
     }
 }

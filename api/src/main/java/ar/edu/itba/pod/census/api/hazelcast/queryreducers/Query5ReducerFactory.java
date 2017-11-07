@@ -30,21 +30,17 @@ public class Query5ReducerFactory implements ReducerFactory<Region, Long, Double
         LOGGER.trace("instantiating reducer");
         return new Reducer<Long, Double>() {
             
-            private Set<Long> homes = new HashSet<>();
+            private final Set<Long> homes = new HashSet<>();
             private int count;
             
             @Override
-            public void reduce(Long homeId) {
-//                LOGGER.trace("reducing {}", workingHomelessPair);
-//                count += pair.getRight();
-//                homes += pair.getLeft();
+            public synchronized void reduce(Long homeId) {
                 homes.add(homeId);
                 count++;
             }
     
             @Override
             public Double finalizeReduce() {
-//                LOGGER.trace("finalize reduce {} {}/{}", region.getName(), homeless, working);
                 if (homes.size() == 0) {
                     return 0.0;
                 }

@@ -35,14 +35,14 @@ public class Query3ReducerFactory implements ReducerFactory<Region, IntegerPair,
             
             @Override
             public void reduce(IntegerPair workingHomelessPair) {
-                LOGGER.trace("reducing {}", workingHomelessPair);
+//                LOGGER.trace("reducing {}", workingHomelessPair);
                 homeless += workingHomelessPair.getRight();
                 working += workingHomelessPair.getLeft();
             }
     
             @Override
             public Double finalizeReduce() {
-                LOGGER.trace("finalize reduce {} {}/{}", region.getName(), homeless, working);
+//                LOGGER.trace("finalize reduce {} {}/{}", region.getName(), homeless, working);
                 if (homeless + working == 0) {
                     return 0.0;
                 }
