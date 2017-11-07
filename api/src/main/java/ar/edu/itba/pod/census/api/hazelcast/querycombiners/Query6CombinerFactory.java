@@ -42,6 +42,11 @@ public class Query6CombinerFactory implements CombinerFactory<String, String, St
 //                LOGGER.debug("dn {}, # = {}, {}", departmentName, provinces.size(), provinces);
                 return provinces;
             }
+    
+            @Override
+            public void reset() {
+                provinces.clear();
+            }
         };
     }
 }

@@ -47,6 +47,13 @@ public class Query3CombinerFactory implements CombinerFactory<Region, BooleanPai
                 LOGGER.trace("finalize chunk {}/{}", working, homeless);
                 return new IntegerPair(working, homeless);
             }
+    
+            @Override
+            public void reset() {
+                super.reset();
+                homeless = 0;
+                working = 0;
+            }
         };
     }
 }
