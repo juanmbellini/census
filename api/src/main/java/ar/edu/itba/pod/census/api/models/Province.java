@@ -79,6 +79,11 @@ public enum Province {
         return region;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * Finds the {@link Province} with the given name.
      *
