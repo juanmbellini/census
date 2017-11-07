@@ -1,5 +1,9 @@
 package ar.edu.itba.pod.census.api.models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Enum containing the regions in which the census is divided into.
  */
@@ -30,6 +34,10 @@ public enum Region {
      */
     public String getName() {
         return name;
+    }
+
+    public static List<Region> toList(){
+        return Arrays.asList(BUENOS_AIRES, CENTER, BIG_NORTH, CUYO, PATAGONIC);
     }
 
     /**
