@@ -34,7 +34,7 @@ public class Query3ReducerFactory implements ReducerFactory<Region, IntegerPair,
             private int working;
             
             @Override
-            public void reduce(IntegerPair workingHomelessPair) {
+            public synchronized void reduce(IntegerPair workingHomelessPair) {
 //                LOGGER.trace("reducing {}", workingHomelessPair);
                 homeless += workingHomelessPair.getRight();
                 working += workingHomelessPair.getLeft();
