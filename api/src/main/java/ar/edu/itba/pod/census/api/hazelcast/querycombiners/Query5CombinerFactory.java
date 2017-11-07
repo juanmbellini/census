@@ -3,6 +3,7 @@ package ar.edu.itba.pod.census.api.hazelcast.querycombiners;
 import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.api.util.BooleanPair;
 import ar.edu.itba.pod.census.api.util.IntegerPair;
+import ar.edu.itba.pod.census.api.util.LongSet;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class Query5CombinerFactory implements CombinerFactory<Region, Long, Inte
         LOGGER.trace("instantiating combiner");
         return new Combiner<Long, IntegerPair>() {
             
-            private final Set<Long> homes = new HashSet<>();
+            private final LongSet homes = new LongSet();
             private int count;
             
             @Override

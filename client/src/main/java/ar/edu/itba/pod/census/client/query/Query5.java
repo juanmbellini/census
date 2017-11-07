@@ -29,7 +29,7 @@ public class Query5 extends HazelcastQuery<Region, Double> {
     protected Map<Region, Double> perform(Job<Long, Citizen> job, QueryParamsContainer params)
             throws ExecutionException, InterruptedException {
         return job.mapper(new Query5Mapper<>())
-                .combiner(new Query5CombinerFactory())
+//                .combiner(new Query5CombinerFactory())
                 .reducer(new Query5ReducerFactory())
                 .submit(new OrderByValueCollator<>(SortDirection.DESC))
                 .get();
