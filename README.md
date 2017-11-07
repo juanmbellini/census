@@ -55,6 +55,33 @@ These instructions will install the development environment into your local mach
 	**Note:** Jar files will be located in the ```<project-root>/<module>/target``` directory, where ```<module>``` can be any of ```api```, ```server``` or ```client```.
 
 
+### Running
+
+1. Build jars
+
+	```
+	$ mvn clean package
+	```
+
+2. Launch servers
+
+	```
+	$ ./srv.sh
+	```
+
+3. Run client
+
+	```
+	$ ./clt.sh
+	-Daddresses=<address list>
+	-Dquery=<query id>
+	-DinPath=<absolute path to file>
+	-DoutPath=<absolute path to file>
+	-DtimeOutPath=<absolute path to file>
+	-Dn=<n arg>
+	-Dprov=<prov arg>
+	```
+
 ## Authors
 
 * [Juan Marcos Bellini](https://github.com/juanmbellini)
