@@ -31,7 +31,6 @@ public class Query2Mapper<K> implements CounterByValueInMapper<K, Citizen, Strin
         this.provinceName = provinceName;
     }
 
-
     @Override
     public void map(K key, Citizen citizen, Context<String, Long> context) {
         if (citizen.getProvince().getName().equals(this.provinceName)) {
