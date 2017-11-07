@@ -32,22 +32,13 @@ public class TopWithMinNCollator<T> implements Collator<Entry<T, Long>, Map<T, L
 		final Map<T, Long> m = new HashMap<>();
 		
 		for (Entry<T, Long> e : arg0) {
-			LOGGER.trace(e.getKey() + ": " + e.getValue());
 			m.put(e.getKey(), e.getValue());
 		}
-		
-		LOGGER.debug("Input: {}", m);
-		
-		final Map<T, Long> result = m.entrySet().stream()
+
+		return m.entrySet().stream()
         .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
         .filter(tLongEntry -> tLongEntry.getValue() >= this.n)
-        .collect(
-        		Collectors.toMap(Entry::getKey, Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new)
-        );
-		
-		LOGGER.debug("Result: {}", result);
-		
-		return result;
+        .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 	}
 
 }
