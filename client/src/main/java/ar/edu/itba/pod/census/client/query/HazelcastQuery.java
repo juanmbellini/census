@@ -56,7 +56,7 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         } catch (ExecutionException | InterruptedException e) {
             LOGGER.error("Could not perform query. Exception message: {}", e.getMessage());
             LOGGER.debug("Exception stacktrace: ", e);
-            throw new RuntimeException(); // TODO: define custom exception?
+            throw new RuntimeException("Could not perform map/reduce job", e);
         }
     }
 
