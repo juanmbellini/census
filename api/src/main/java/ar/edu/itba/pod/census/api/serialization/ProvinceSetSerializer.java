@@ -16,7 +16,7 @@ public class ProvinceSetSerializer implements StreamSerializer<ProvinceSet> {
     public void write(ObjectDataOutput out, ProvinceSet provinceSet) throws IOException {
         out.writeInt(provinceSet.size());
         for (Province province : provinceSet) {
-            out.writeUTF(province.getName());
+            out.writeInt(province.ordinal());
         }
     }
 
@@ -25,7 +25,7 @@ public class ProvinceSetSerializer implements StreamSerializer<ProvinceSet> {
         final ProvinceSet provinceSet = new ProvinceSet();
         final Integer count = in.readInt();
         for (int i = 0; i < count; i++) {
-            provinceSet.add(Province.fromName(in.readUTF()));
+            provinceSet.add(Province.values()[in.readInt()]);
         }
         return provinceSet;
     }
