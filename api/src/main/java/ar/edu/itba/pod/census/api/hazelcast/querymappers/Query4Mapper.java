@@ -2,13 +2,9 @@ package ar.edu.itba.pod.census.api.hazelcast.querymappers;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.util.BooleanPair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -23,17 +19,8 @@ public class Query4Mapper<K> implements Mapper<K, Citizen, Region, Long> {
      */
     private static final long serialVersionUID = 344329467838L;
 
-    /**
-     * The {@link Logger}.
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Query4Mapper.class);
-
     public void map(K key, Citizen citizen, Context<Region, Long> context) {
-        LOGGER.trace("Started mapping...");
-
         context.emit(toOutKeyFunction().apply(citizen), toOutValueFunction().apply(citizen));
-
-        LOGGER.trace("Finished mapping");
     }
 
 

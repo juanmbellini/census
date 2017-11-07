@@ -4,8 +4,6 @@ import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
@@ -21,16 +19,9 @@ public class Query1Mapper<K> implements CounterByValueInMapper<K, Citizen, Regio
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * The {@link Logger}.
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Query1Mapper.class);
-
     @Override
     public void map(K key, Citizen citizen, Context<Region, Long> context) {
-        LOGGER.trace("Started mapping...");
         CounterByValueInMapper.super.map(key, citizen, context);
-        LOGGER.trace("Finished mapping");
     }
 
     @Override

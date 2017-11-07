@@ -1,11 +1,8 @@
 package ar.edu.itba.pod.census.api.hazelcast.queryreducers;
 
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.util.IntegerPair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,11 +20,8 @@ public class Query5ReducerFactory implements ReducerFactory<Region, Long, Double
      */
     private static final long serialVersionUID = 1L;
     
-    private final static Logger LOGGER = LoggerFactory.getLogger(Query5ReducerFactory.class);
-    
     @Override
     public Reducer<Long, Double> newReducer(final Region region) {
-        LOGGER.trace("instantiating reducer");
         return new Reducer<Long, Double>() {
             
             private final Set<Long> homes = new HashSet<>();
