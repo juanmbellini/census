@@ -7,23 +7,23 @@ import com.hazelcast.mapreduce.ReducerFactory;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Query4ReducerFactory implements ReducerFactory<Region, Set<Long>, Long> {
+public class Query4ReducerFactory implements ReducerFactory<Region, Long, Long> {
 
 
     @Override
-    public Reducer<Set<Long>, Long> newReducer(Region region) {
-        return new Reducer<Set<Long>, Long>() {
+    public Reducer<Long, Long> newReducer(Region region) {
+        return new Reducer<Long, Long>() {
 
-            Set<Long> set = new HashSet<>();
+            private final Set<Long> homes = new HashSet<>();
 
             @Override
-            public void reduce(Set<Long> incomingSet) {
-                incomingSet.forEach((v) -> set.add(v));
+            public void reduce(Long homeId) {
+                homes.add(homeId);
             }
 
             @Override
             public Long finalizeReduce() {
-                return Long.valueOf(set.size());
+                return Long.valueOf(homes.size());
             }
         };
     }
