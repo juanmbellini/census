@@ -90,8 +90,7 @@ public enum Province {
      * @param name The province name.
      * @return The Province with the given name.
      */
-    /* package */
-    static Province fromName(String name) {
+    public static Province fromName(String name) {
         return valuesByName.get(name);
     }
 }
