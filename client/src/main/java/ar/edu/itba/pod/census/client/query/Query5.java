@@ -13,6 +13,10 @@ import com.hazelcast.mapreduce.Job;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Class representing the {@link Query} with {@code queryId} 5.
+ * Implemented using Hazelcast (it extends {@link HazelcastQuery}).
+ */
 public class Query5 extends HazelcastQuery<Region, Double> {
 
     /**
