@@ -1,11 +1,8 @@
 package ar.edu.itba.pod.census.api.hazelcast.querymappers;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
-import ar.edu.itba.pod.census.api.models.Region;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -22,16 +19,8 @@ public class Query6Mapper<K> implements Mapper<K, Citizen, String, String> {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * The {@link Logger}.
-	 */
-	private final static Logger LOGGER = LoggerFactory.getLogger(Query6Mapper.class);
-	
 	public void map(K key, Citizen citizen, Context<String, String> context) {
-		LOGGER.trace("Started mapping...");
-		
 		context.emit(toOutKeyFunction().apply(citizen), citizen.getProvince().getName());
-		LOGGER.trace("Finished mapping");
 	}
 	
 	public Function<Citizen, String> toOutKeyFunction() {

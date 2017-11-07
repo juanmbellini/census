@@ -1,14 +1,8 @@
 package ar.edu.itba.pod.census.api.hazelcast.queryreducers;
 
-import ar.edu.itba.pod.census.api.models.Region;
 import ar.edu.itba.pod.census.api.util.StringSet;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * {@link ReducerFactory} for the query 1
@@ -23,9 +17,6 @@ public class Query6ReducerFactory implements ReducerFactory<String, StringSet, L
      */
     private static final long serialVersionUID = 1L;
     
-    
-    private final static Logger LOGGER = LoggerFactory.getLogger(Query6ReducerFactory.class);
-    
     @Override
     public Reducer<StringSet, Long> newReducer(String department) {
         return new Reducer<StringSet, Long>() {
@@ -34,7 +25,6 @@ public class Query6ReducerFactory implements ReducerFactory<String, StringSet, L
             
             @Override
             public synchronized void reduce(StringSet _provinces) {
-//                LOGGER.debug("dn {} ");
                 provinces.addAll(_provinces);
             }
     
