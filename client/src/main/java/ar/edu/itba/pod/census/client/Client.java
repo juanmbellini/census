@@ -37,43 +37,49 @@ public class Client {
      * @throws IOException If any IO error occurs during program execution.
      */
     public static void main(String[] args) throws IOException {
-        final LocalDateTime startingClient = LocalDateTime.now();
-        LOGGER.info("Census client starting ...");
+        try {
+            final LocalDateTime startingClient = LocalDateTime.now();
+            LOGGER.info("Census client starting ...");
+            // Get program arguments
+            LOGGER.info("Reading program arguments");
+            final InputParams params = new InputParams();
+            LOGGER.info("Finished reading program arguments");
+            LOGGER.debug("Program arguments are: {}", params);
 
-        // Get program arguments
-        LOGGER.info("Reading program arguments");
-        final InputParams params = new InputParams();
-        LOGGER.info("Finished reading program arguments");
-        LOGGER.debug("Program arguments are: {}", params);
+            // Create the already configured hazelcast instance
+            LOGGER.info("Creating Hazelcast instance");
+            final HazelcastInstance hazelcastClient = createHazelcastClient(params.getAddresses());
+            LOGGER.info("Finished creating Hazelcast instance");
 
-        // Create the already configured hazelcast instance
-        LOGGER.info("Creating Hazelcast instance");
-        final HazelcastInstance hazelcastClient = createHazelcastClient(params.getAddresses());
-        LOGGER.info("Finished creating Hazelcast instance");
+            // Read data once Hazelcast instance is created
+            LOGGER.info("Reading data file");
+            final LocalDateTime startingReading = LocalDateTime.now();
+            final List<Citizen> citizens = InputDataReader.readCitizens(params.getDataFilePath());
+            final LocalDateTime finishedReading = LocalDateTime.now();
+            LOGGER.info("Finished reading data file");
 
-        // Read data once Hazelcast instance is created
-        LOGGER.info("Reading data file");
-        final LocalDateTime startingReading = LocalDateTime.now();
-        final List<Citizen> citizens = InputDataReader.readCitizens(params.getDataFilePath());
-        final LocalDateTime finishedReading = LocalDateTime.now();
-        LOGGER.info("Finished reading data file");
+            // Perform map/reduce job
+            LOGGER.info("Starting query {} task...", params.getQueryId());
+            final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
+            final LocalDateTime startingJob = LocalDateTime.now();
+            final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
+                    .createHazelcastQuery(hazelcastClient)
+                    .perform(citizens, queryParams);
+            final LocalDateTime finishedJob = LocalDateTime.now();
+            LOGGER.info("Finished query task");
 
-        // Perform map/reduce job
-        LOGGER.info("Starting query {} task...", params.getQueryId());
-        final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
-        final LocalDateTime startingJob = LocalDateTime.now();
-        final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
-                .createHazelcastQuery(hazelcastClient)
-                .perform(citizens, queryParams);
-        final LocalDateTime finishedJob = LocalDateTime.now();
-        LOGGER.info("Finished query task");
-
-        // Save results (fallback into stdout if any IO error occurs)
-        LOGGER.info("Saving results and timestamps...");
-        saveOutput(params.getOutputFilePath(), result,
-                params.getTimestampsFilePath(), startingClient,
-                startingReading, finishedReading, startingJob, finishedJob);
-        LOGGER.info("Finished saving results and timestamps");
+            // Save results (fallback into stdout if any IO error occurs)
+            LOGGER.info("Saving results and timestamps...");
+            saveOutput(params.getOutputFilePath(), result,
+                    params.getTimestampsFilePath(), startingClient,
+                    startingReading, finishedReading, startingJob, finishedJob);
+            LOGGER.info("Finished saving results and timestamps");
+            hazelcastClient.shutdown();
+        } catch (Throwable e) {
+            LOGGER.error("There was an error while executing the system client. Exception message: {}", e.getMessage());
+            LOGGER.debug("Stacktrace: ", e);
+            System.exit(1);
+        }
 
     }
 
