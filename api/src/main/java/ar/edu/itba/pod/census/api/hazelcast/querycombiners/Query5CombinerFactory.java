@@ -28,26 +28,39 @@ public class Query5CombinerFactory implements CombinerFactory<Region, Long, Long
             private long count = 0;
 
             /**
+             * Holds already sent home ids (in order to not resend them).
+             */
+            private final LongSet alreadySentHomes = new LongSet();
+
+            /**
              * Contains the homeIds for the actual chunk.
              */
-            private final LongSet homes = new LongSet();
+            private final LongSet actualChunkHomes = new LongSet();
 
             @Override
             public void combine(Long homeId) {
-                homes.add(homeId);
+                if (!alreadySentHomes.contains(homeId)) {
+                    actualChunkHomes.add(homeId);
+                }
                 count++;
             }
 
             @Override
             public LongLongSetPair finalizeChunk() {
+                alreadySentHomes.addAll(actualChunkHomes);
                 // Send set in a new instance as the one held bu this Combiner will be reset.
-                return new LongLongSetPair(count, new LongSet(homes));
+                return new LongLongSetPair(count, new LongSet(actualChunkHomes));
             }
 
             @Override
             public void reset() {
                 count = 0;
-                homes.clear();
+                actualChunkHomes.clear();
+            }
+
+            @Override
+            public void finalizeCombine() {
+                alreadySentHomes.clear();
             }
         };
     }

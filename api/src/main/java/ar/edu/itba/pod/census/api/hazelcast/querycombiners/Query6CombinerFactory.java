@@ -21,24 +21,37 @@ public class Query6CombinerFactory implements CombinerFactory<String, Province, 
         return new Combiner<Province, ProvinceSet>() {
 
             /**
+             * Holds already sent {@link Province}s (in order to not resend them).
+             */
+            private final ProvinceSet alreadySentProvinces = new ProvinceSet();
+
+            /**
              * Contains the {@link Province}s for the actual chunk.
              */
-            private final ProvinceSet provinces = new ProvinceSet();
+            private final ProvinceSet actualChunkProvinces = new ProvinceSet();
 
             @Override
             public void combine(Province province) {
-                provinces.add(province);
+                if (!alreadySentProvinces.contains(province)) {
+                    actualChunkProvinces.add(province);
+                }
             }
 
             @Override
             public ProvinceSet finalizeChunk() {
+                alreadySentProvinces.addAll(actualChunkProvinces);
                 // Send it in a new instance as the one held bu this Combiner will be reset.
-                return new ProvinceSet(provinces);
+                return new ProvinceSet(actualChunkProvinces);
             }
 
             @Override
             public void reset() {
-                provinces.clear();
+                actualChunkProvinces.clear();
+            }
+
+            @Override
+            public void finalizeCombine() {
+                alreadySentProvinces.clear();
             }
         };
     }
