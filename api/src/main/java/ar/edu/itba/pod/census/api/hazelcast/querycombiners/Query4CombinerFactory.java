@@ -15,7 +15,7 @@ import java.util.Set;
  * {@link CombinerFactory} for the query 4
  * (i.e returns a {@link Combiner} that count elements of the same department name).
  */
-public class Query4CombinerFactory implements CombinerFactory<Region, Long, Map<Region, Set<Long>>> {
+public class Query4CombinerFactory implements CombinerFactory<Region, Long, Set<Long>> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Query4CombinerFactory.class);
 
@@ -26,34 +26,27 @@ public class Query4CombinerFactory implements CombinerFactory<Region, Long, Map<
 
 
     @Override
-    public Combiner<Long, Map<Region, Set<Long>>> newCombiner(Region region) {
+    public Combiner<Long, Set<Long>> newCombiner(Region region) {
 
-        return new Combiner<Long, Map<Region, Set<Long>>>() {
+        return new Combiner<Long, Set<Long>>() {
 
-            private Map<Region, Set<Long>> map = new HashMap<>();
-
-            @Override
-            public void beginCombine() {
-                super.beginCombine();
-                Region.toList().forEach((r) -> map.put(r, new HashSet<>()));
-            }
+            private Set<Long> set = new HashSet<>();
 
             @Override
             public void combine(Long homeId) {
                 LOGGER.trace("Combining homeId {}", homeId);
-                map.get(region).add(homeId);
+                set.add(homeId);
             }
 
             @Override
-            public Map<Region, Set<Long>> finalizeChunk() {
+            public Set<Long> finalizeChunk() {
                 LOGGER.trace("Finalize chunk");
-                return map;
+                return set;
             }
 
             @Override
             public void reset(){
-                this.map = new HashMap<>();
-                Region.toList().forEach((r) -> map.put(r, new HashSet<>()));
+                this.set = new HashSet<>();
             }
         };
     }

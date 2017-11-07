@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Query4ReducerFactory implements ReducerFactory<Void, Map<Region, Set<Long>>, Map<Region, Long>> {
+public class Query4ReducerFactory implements ReducerFactory<Region, Set<Long>, Map<Region, Long>> {
 
 
     @Override
-    public Reducer<Map<Region, Set<Long>>, Map<Region, Long>> newReducer(Void a) {
-        return new Reducer<Map<Region, Set<Long>>, Map<Region, Long>>() {
+    public Reducer<Set<Long>, Map<Region, Long>> newReducer(Region region) {
+        return new Reducer<Set<Long>, Map<Region, Long>>() {
 
             Map<Region, Set<Long>> map = new ConcurrentHashMap<>();
 
@@ -25,10 +25,8 @@ public class Query4ReducerFactory implements ReducerFactory<Void, Map<Region, Se
             }
 
             @Override
-            public void reduce(Map<Region, Set<Long>> regionSetMap) {
-                for (Map.Entry<Region, Set<Long>> entry : regionSetMap.entrySet()){
-                    entry.getValue().forEach(v -> map.get(entry.getKey()).add(v));
-                }
+            public void reduce(Set<Long> set) {
+                set.forEach((v) -> map.get(region).add(v));
             }
 
             @Override
@@ -39,4 +37,5 @@ public class Query4ReducerFactory implements ReducerFactory<Void, Map<Region, Se
             }
         };
     }
+
 }
