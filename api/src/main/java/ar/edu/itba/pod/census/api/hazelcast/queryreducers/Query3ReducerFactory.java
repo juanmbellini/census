@@ -43,6 +43,9 @@ public class Query3ReducerFactory implements ReducerFactory<Region, IntegerPair,
             @Override
             public Double finalizeReduce() {
                 LOGGER.trace("finalize reduce {} {}/{}", region.getName(), homeless, working);
+                if (homeless + working == 0) {
+                    return 0.0;
+                }
                 return homeless / (double)(homeless + working);
             }
         };
