@@ -11,10 +11,6 @@ import java.util.Optional;
  */
 public class InputParams {
 
-//    private String name;
-//    private String pass;
-
-
     // =======================================
     // Cluster arguments
     // =======================================
@@ -43,7 +39,7 @@ public class InputParams {
     // Query param arguments
     // =======================================
 
-    @SystemProperty(value = "n", defaultValue= "10")
+    @SystemProperty(value = "n", defaultValue = "10")
     private Integer n;
 
     @SystemProperty(value = "prov", defaultValue = "Santa Fe")
@@ -58,15 +54,6 @@ public class InputParams {
 
         // TODO: validate arguments
     }
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public String getPass() {
-//        return pass;
-//    }
-
 
     /**
      * @return The list of member node ip addresses.
@@ -174,8 +161,6 @@ public class InputParams {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append("name: ").append(name).append("\n");
-//        stringBuilder.append("pass: ").append(pass).append("\n");
         stringBuilder.append("addresses: ").append(Arrays.toString(addresses)).append("\n");
         stringBuilder.append("data file path: ").append(dataFilePath).append("\n");
         stringBuilder.append("output path: ").append(outputFilePath).append("\n");
