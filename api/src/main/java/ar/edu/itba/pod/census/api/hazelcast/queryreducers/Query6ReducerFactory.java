@@ -33,7 +33,7 @@ public class Query6ReducerFactory implements ReducerFactory<String, StringSet, L
             private final StringSet provinces = new StringSet();
             
             @Override
-            public void reduce(StringSet _provinces) {
+            public synchronized void reduce(StringSet _provinces) {
 //                LOGGER.debug("dn {} ");
                 provinces.addAll(_provinces);
             }

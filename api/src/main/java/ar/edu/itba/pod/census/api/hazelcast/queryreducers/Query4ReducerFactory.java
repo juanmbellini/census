@@ -17,7 +17,7 @@ public class Query4ReducerFactory implements ReducerFactory<Region, Long, Long> 
             private final Set<Long> homes = new HashSet<>();
 
             @Override
-            public void reduce(Long homeId) {
+            public synchronized void reduce(Long homeId) {
                 homes.add(homeId);
             }
 

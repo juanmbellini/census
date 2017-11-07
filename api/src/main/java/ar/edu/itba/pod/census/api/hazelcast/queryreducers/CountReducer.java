@@ -4,6 +4,8 @@ import com.hazelcast.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Reducer that counts.
  */
@@ -17,23 +19,23 @@ public class CountReducer extends Reducer<Long, Long> {
     /**
      * Holds the count that was informed to this reducer.
      */
-    private long count = 0;
+    private AtomicLong count = new AtomicLong(0);
 
     @Override
     public void beginReduce() {
-        LOGGER.debug("Started reducing...");
+        LOGGER.trace("Started reducing...");
         super.beginReduce();
     }
 
     @Override
     public void reduce(Long partialCount) {
         LOGGER.trace("Reducing...");
-        this.count += partialCount;
+        this.count.addAndGet(partialCount);
     }
 
     @Override
     public Long finalizeReduce() {
-        LOGGER.debug("Finished reducing. Final result is {}", this.count);
-        return this.count;
+        LOGGER.trace("Finished reducing. Final result is {}", this.count);
+        return this.count.longValue();
     }
 }
