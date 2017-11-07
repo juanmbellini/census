@@ -1,14 +1,8 @@
 package ar.edu.itba.pod.census.api.hazelcast.config;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
-import ar.edu.itba.pod.census.api.serialization.CitizenSerializer;
-import ar.edu.itba.pod.census.api.serialization.BooleanPairSerializer;
-import ar.edu.itba.pod.census.api.serialization.IntegerPairSerializer;
-import ar.edu.itba.pod.census.api.serialization.StringSetSerializer;
-import ar.edu.itba.pod.census.api.util.BooleanPair;
-import ar.edu.itba.pod.census.api.util.IntegerPair;
-import ar.edu.itba.pod.census.api.util.Pair;
-import ar.edu.itba.pod.census.api.util.StringSet;
+import ar.edu.itba.pod.census.api.serialization.*;
+import ar.edu.itba.pod.census.api.util.*;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.config.SerializationConfig;
 import com.hazelcast.config.SerializerConfig;
@@ -53,6 +47,12 @@ public class ConfigProvider {
                         .setTypeClass(IntegerPair.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new StringSetSerializer())
-                        .setTypeClass(StringSet.class));
+                        .setTypeClass(StringSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new IntegerSetSerializer())
+                        .setTypeClass(IntegerSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new LongSetSerializer())
+                        .setTypeClass(LongSet.class));
     }
 }
