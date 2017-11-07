@@ -8,7 +8,8 @@ import com.hazelcast.mapreduce.CombinerFactory;
 
 /**
  * {@link CombinerFactory} for the query 5
- * (i.e returns a {@link Combiner} that count elements of the same department name).
+ * (i.e returns a {@link Combiner} that count {@link ar.edu.itba.pod.census.api.models.Citizen}s
+ * and holds homeIds of the same {@link Region}).
  */
 public class Query5CombinerFactory implements CombinerFactory<Region, Long, LongLongSetPair> {
 
@@ -21,8 +22,15 @@ public class Query5CombinerFactory implements CombinerFactory<Region, Long, Long
     public Combiner<Long, LongLongSetPair> newCombiner(Region region) {
         return new Combiner<Long, LongLongSetPair>() {
 
-            private final LongSet homes = new LongSet();
+            /**
+             * Contains the count for the actual chunk.
+             */
             private long count = 0;
+
+            /**
+             * Contains the homeIds for the actual chunk.
+             */
+            private final LongSet homes = new LongSet();
 
             @Override
             public void combine(Long homeId) {

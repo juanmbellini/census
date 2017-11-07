@@ -7,7 +7,7 @@ import com.hazelcast.mapreduce.CombinerFactory;
 
 /**
  * {@link CombinerFactory} for the query 4
- * (i.e returns a {@link Combiner} that count elements of the same department name).
+ * (i.e returns a {@link Combiner} that holds homeIds of the same {@link Region}).
  */
 public class Query4CombinerFactory implements CombinerFactory<Region, Long, LongSet> {
 

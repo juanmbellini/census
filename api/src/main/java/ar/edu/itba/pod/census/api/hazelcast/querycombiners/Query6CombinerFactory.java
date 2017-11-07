@@ -6,8 +6,8 @@ import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
 /**
- * {@link CombinerFactory} for the query 5
- * (i.e returns a {@link Combiner} that count elements of the same department name).
+ * {@link CombinerFactory} for the query 6
+ * (i.e returns a {@link Combiner} that holds {@link Province}s of the same department name).
  */
 public class Query6CombinerFactory implements CombinerFactory<String, Province, ProvinceSet> {
 

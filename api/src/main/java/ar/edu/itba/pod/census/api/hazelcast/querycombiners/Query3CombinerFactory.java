@@ -7,7 +7,8 @@ import com.hazelcast.mapreduce.CombinerFactory;
 
 /**
  * {@link CombinerFactory} for the query 3
- * (i.e returns a {@link Combiner} that count elements of the same department name).
+ * (i.e returns a {@link Combiner} that count working and homeless {@link ar.edu.itba.pod.census.api.models.Citizen}
+ * of the same {@link Region}).
  */
 public class Query3CombinerFactory implements CombinerFactory<Region, Boolean, IntegerPair> {
 
@@ -20,8 +21,15 @@ public class Query3CombinerFactory implements CombinerFactory<Region, Boolean, I
     public Combiner<Boolean, IntegerPair> newCombiner(Region region) {
         return new Combiner<Boolean, IntegerPair>() {
 
-            private int homeless;
-            private int working;
+            /**
+             * Contains the working {@link ar.edu.itba.pod.census.api.models.Citizen}s for the actual chunk.
+             */
+            private int working = 0;
+
+            /**
+             * Contains the homeless {@link ar.edu.itba.pod.census.api.models.Citizen}s for the actual chunk.
+             */
+            private int homeless = 0;
 
             @Override
             public void combine(Boolean isWorking) {
