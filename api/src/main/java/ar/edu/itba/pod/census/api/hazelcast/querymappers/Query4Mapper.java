@@ -8,9 +8,9 @@ import com.hazelcast.mapreduce.Mapper;
 import java.util.function.Function;
 
 /**
- * {@link Mapper} for the query 4 (i.e transforms {@link Citizen} into a unit {@link Long}).
+ * {@link Mapper} for the query 4 (i.e transforms {@link Citizen} into a &lt;{@link Region},{@code homeId}&gt; pair).
  *
- * @param <K> The type of the input and output key.
+ * @param <K> The type of the input key.
  */
 public class Query4Mapper<K> implements Mapper<K, Citizen, Region, Long> {
 
@@ -28,7 +28,7 @@ public class Query4Mapper<K> implements Mapper<K, Citizen, Region, Long> {
         return Citizen::getRegion;
     }
 
-    public Function<Citizen, Long> toOutValueFunction(){
+    public Function<Citizen, Long> toOutValueFunction() {
         return Citizen::getHomeId;
     }
 }

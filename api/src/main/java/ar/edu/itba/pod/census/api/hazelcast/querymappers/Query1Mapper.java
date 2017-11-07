@@ -8,9 +8,9 @@ import com.hazelcast.mapreduce.Mapper;
 import java.util.function.Function;
 
 /**
- * {@link Mapper} for the query 1 (i.e transforms {@link Citizen} into a unit {@link Long}).
+ * {@link Mapper} for the query 1 (i.e transforms {@link Citizen} into a &lt;{@link Region}, unit&gt; pair).
  *
- * @param <K> The type of the input and output key.
+ * @param <K> The type of the input key.
  */
 public class Query1Mapper<K> implements CounterByValueInMapper<K, Citizen, Region> {
 
