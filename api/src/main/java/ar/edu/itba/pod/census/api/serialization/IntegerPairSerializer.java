@@ -1,8 +1,6 @@
 package ar.edu.itba.pod.census.api.serialization;
 
-import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.util.IntegerPair;
-import ar.edu.itba.pod.census.api.util.Pair;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.StreamSerializer;
@@ -10,7 +8,7 @@ import com.hazelcast.nio.serialization.StreamSerializer;
 import java.io.IOException;
 
 /**
- * Custom serializer that is in charge of reading/writing {@link Citizen}.
+ * Custom serializer that is in charge of reading/writing {@link IntegerPair}.
  */
 public class IntegerPairSerializer implements StreamSerializer<IntegerPair> {
     @Override
