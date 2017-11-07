@@ -58,6 +58,7 @@ public class Client {
         final LocalDateTime finishedReading = LocalDateTime.now();
         LOGGER.info("Finished reading data file");
 
+        // Perform map/reduce job
         LOGGER.info("Starting query {} task...", params.getQueryId());
         final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
         final LocalDateTime startingJob = LocalDateTime.now();
@@ -68,19 +69,11 @@ public class Client {
         LOGGER.info("Finished query task");
 
         // Save results (fallback into stdout if any IO error occurs)
+        LOGGER.info("Saving results and timestamps...");
         saveOutput(params.getOutputFilePath(), result,
                 params.getTimestampsFilePath(), startingClient,
                 startingReading, finishedReading, startingJob, finishedJob);
-
-
-//        result.forEach((region, count) -> System.out.println(region + ": " + count));
-
-        // Compare results with Java8 streams... TODO: remove this
-//        Map<Region, Long> java8Result = citizens.stream().map(Citizen::getRegion)
-//                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//        System.out.println("With Java8...");
-//        java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
-        LOGGER.info("Finished printing results");
+        LOGGER.info("Finished saving results and timestamps");
 
     }
 
