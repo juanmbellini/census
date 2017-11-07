@@ -21,11 +21,14 @@ public class Query6ReducerFactory implements ReducerFactory<String, ProvinceSet,
     public Reducer<ProvinceSet, Long> newReducer(String department) {
         return new Reducer<ProvinceSet, Long>() {
 
+            /**
+             * Contains the received {@link ar.edu.itba.pod.census.api.models.Province}s.
+             */
             private final ProvinceSet provinces = new ProvinceSet();
 
             @Override
-            public synchronized void reduce(ProvinceSet _provinces) {
-                provinces.addAll(_provinces);
+            public synchronized void reduce(ProvinceSet provinces) {
+                this.provinces.addAll(provinces);
             }
 
             @Override

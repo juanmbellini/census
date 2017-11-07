@@ -20,6 +20,9 @@ public class Query6CombinerFactory implements CombinerFactory<String, Province, 
     public Combiner<Province, ProvinceSet> newCombiner(final String departmentName) {
         return new Combiner<Province, ProvinceSet>() {
 
+            /**
+             * Contains the {@link Province}s for the actual chunk.
+             */
             private final ProvinceSet provinces = new ProvinceSet();
 
             @Override
@@ -29,16 +32,12 @@ public class Query6CombinerFactory implements CombinerFactory<String, Province, 
 
             @Override
             public ProvinceSet finalizeChunk() {
-                return provinces;
+                // Send it in a new instance as the one held bu this Combiner will be reset.
+                return new ProvinceSet(provinces);
             }
 
             @Override
             public void reset() {
-                // Do nothing as we need to maintain internal state
-            }
-
-            @Override
-            public void finalizeCombine() {
                 provinces.clear();
             }
         };
