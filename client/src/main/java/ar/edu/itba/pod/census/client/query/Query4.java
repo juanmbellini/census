@@ -13,6 +13,10 @@ import com.hazelcast.mapreduce.Job;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Class representing the {@link Query} with {@code queryId} 4.
+ * Implemented using Hazelcast (it extends {@link HazelcastQuery}).
+ */
 public class Query4 extends HazelcastQuery<Region, Long> {
 
     /**
@@ -26,7 +30,7 @@ public class Query4 extends HazelcastQuery<Region, Long> {
     protected Map<Region, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
             throws ExecutionException, InterruptedException {
         return job.mapper(new Query4Mapper<>())
-//                .combiner(new Query4CombinerFactory())
+                .combiner(new Query4CombinerFactory())
                 .reducer(new Query4ReducerFactory())
                 .submit(new OrderByValueCollator<>(SortDirection.DESC))
                 .get();

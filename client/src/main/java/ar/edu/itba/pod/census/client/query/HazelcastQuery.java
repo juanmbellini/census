@@ -54,9 +54,9 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         try {
             return perform(job, queryParams);
         } catch (ExecutionException | InterruptedException e) {
-            LOGGER.error("Could not perform query. Exception message: {}", e.getMessage());
-            LOGGER.debug("Exception stacktrace: ", e);
-            throw new RuntimeException(); // TODO: define custom exception?
+            LOGGER.debug("Could not perform query. Exception message: {}", e.getMessage());
+            LOGGER.trace("Exception stacktrace: ", e);
+            throw new RuntimeException("Could not perform map/reduce job", e);
         }
     }
 
@@ -81,7 +81,7 @@ public abstract class HazelcastQuery<K, V> implements Query<K, V> {
         final IMap<Long, Citizen> hazelcastMap = hazelcastInstance.getMap(hazelcastInstance.getName());
         hazelcastMap.clear(); // Must clear remote map
         return citizens.stream()
-                .parallel() // TODO: check if necessary
+                .parallel() // Make it faster
                 .collect(new ToIMapCollector<>(() -> new SecureRandom().nextLong(), hazelcastMap, citizens.size()));
     }
 

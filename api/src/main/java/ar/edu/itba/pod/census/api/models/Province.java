@@ -79,14 +79,18 @@ public enum Province {
         return region;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * Finds the {@link Province} with the given name.
      *
      * @param name The province name.
      * @return The Province with the given name.
      */
-    /* package */
-    static Province fromName(String name) {
+    public static Province fromName(String name) {
         return valuesByName.get(name);
     }
 }

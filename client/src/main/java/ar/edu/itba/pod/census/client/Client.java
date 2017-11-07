@@ -2,9 +2,9 @@ package ar.edu.itba.pod.census.client;
 
 import ar.edu.itba.pod.census.api.hazelcast.config.ConfigProvider;
 import ar.edu.itba.pod.census.api.models.Citizen;
-import ar.edu.itba.pod.census.client.io.cli.InputParams;
-import ar.edu.itba.pod.census.client.io.input.StreamsCensusReader;
-import ar.edu.itba.pod.census.client.io.output.OutputWriter;
+import ar.edu.itba.pod.census.client.io.InputDataReader;
+import ar.edu.itba.pod.census.client.io.InputParams;
+import ar.edu.itba.pod.census.client.io.OutputWriter;
 import ar.edu.itba.pod.census.client.query.HazelcastQueryCreator;
 import ar.edu.itba.pod.census.client.query.Query;
 import com.hazelcast.client.HazelcastClient;
@@ -37,50 +37,49 @@ public class Client {
      * @throws IOException If any IO error occurs during program execution.
      */
     public static void main(String[] args) throws IOException {
-        final LocalDateTime startingClient = LocalDateTime.now();
-        LOGGER.info("Census client starting ...");
+        try {
+            final LocalDateTime startingClient = LocalDateTime.now();
+            LOGGER.info("Census client starting ...");
+            // Get program arguments
+            LOGGER.info("Reading program arguments");
+            final InputParams params = new InputParams();
+            LOGGER.info("Finished reading program arguments");
+            LOGGER.debug("Program arguments are: {}", params);
 
-        // Get program arguments
-        LOGGER.info("Reading program arguments");
-        final InputParams params = new InputParams();
-        LOGGER.info("Finished reading program arguments");
-        LOGGER.debug("Program arguments are: {}", params);
+            // Create the already configured hazelcast instance
+            LOGGER.info("Creating Hazelcast instance");
+            final HazelcastInstance hazelcastClient = createHazelcastClient(params.getAddresses());
+            LOGGER.info("Finished creating Hazelcast instance");
 
-        // Create the already configured hazelcast instance
-        LOGGER.info("Creating Hazelcast instance");
-        final HazelcastInstance hazelcastClient = createHazelcastClient(params.getAddresses());
-        LOGGER.info("Finished creating Hazelcast instance");
+            // Read data once Hazelcast instance is created
+            LOGGER.info("Reading data file");
+            final LocalDateTime startingReading = LocalDateTime.now();
+            final List<Citizen> citizens = InputDataReader.readCitizens(params.getDataFilePath());
+            final LocalDateTime finishedReading = LocalDateTime.now();
+            LOGGER.info("Finished reading data file");
 
-        // Read data once Hazelcast instance is created
-        LOGGER.info("Reading data file");
-        final LocalDateTime startingReading = LocalDateTime.now();
-        final List<Citizen> citizens = StreamsCensusReader.readCitizens(params.getDataFilePath());
-        final LocalDateTime finishedReading = LocalDateTime.now();
-        LOGGER.info("Finished reading data file");
+            // Perform map/reduce job
+            LOGGER.info("Starting query {} task...", params.getQueryId());
+            final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
+            final LocalDateTime startingJob = LocalDateTime.now();
+            final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
+                    .createHazelcastQuery(hazelcastClient)
+                    .perform(citizens, queryParams);
+            final LocalDateTime finishedJob = LocalDateTime.now();
+            LOGGER.info("Finished query task");
 
-        LOGGER.info("Starting query {} task...", params.getQueryId());
-        final Query.QueryParamsContainer queryParams = new Query.QueryParamsContainer(params.getN(), params.getProv());
-        final LocalDateTime startingJob = LocalDateTime.now();
-        final Map<?, ?> result = HazelcastQueryCreator.getCreatorByQueryId(params.getQueryId())
-                .createHazelcastQuery(hazelcastClient)
-                .perform(citizens, queryParams);
-        final LocalDateTime finishedJob = LocalDateTime.now();
-        LOGGER.info("Finished query task");
-
-        // Save results (fallback into stdout if any IO error occurs)
-        saveOutput(params.getOutputFilePath(), result,
-                params.getTimestampsFilePath(), startingClient,
-                startingReading, finishedReading, startingJob, finishedJob);
-
-
-//        result.forEach((region, count) -> System.out.println(region + ": " + count));
-
-        // Compare results with Java8 streams... TODO: remove this
-//        Map<Region, Long> java8Result = citizens.stream().map(Citizen::getRegion)
-//                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//        System.out.println("With Java8...");
-//        java8Result.forEach((region, count) -> System.out.println(region + ": " + count));
-        LOGGER.info("Finished printing results");
+            // Save results (fallback into stdout if any IO error occurs)
+            LOGGER.info("Saving results and timestamps...");
+            saveOutput(params.getOutputFilePath(), result,
+                    params.getTimestampsFilePath(), startingClient,
+                    startingReading, finishedReading, startingJob, finishedJob);
+            LOGGER.info("Finished saving results and timestamps");
+            hazelcastClient.shutdown();
+        } catch (Throwable e) {
+            LOGGER.error("There was an error while executing the system client. Exception message: {}", e.getMessage());
+            LOGGER.debug("Stacktrace: ", e);
+            System.exit(1);
+        }
 
     }
 

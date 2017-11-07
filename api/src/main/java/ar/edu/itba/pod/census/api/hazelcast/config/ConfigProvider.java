@@ -40,9 +40,6 @@ public class ConfigProvider {
                         .setImplementation(new CitizenSerializer())
                         .setTypeClass(Citizen.class))
                 .addSerializerConfig(new SerializerConfig()
-                        .setImplementation(new BooleanPairSerializer())
-                        .setTypeClass(BooleanPair.class))
-                .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new IntegerPairSerializer())
                         .setTypeClass(IntegerPair.class))
                 .addSerializerConfig(new SerializerConfig()
@@ -56,6 +53,12 @@ public class ConfigProvider {
                         .setTypeClass(IntegerSet.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new LongSetSerializer())
-                        .setTypeClass(LongSet.class));
+                        .setTypeClass(LongSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new ProvinceSetSerializer())
+                        .setTypeClass(ProvinceSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new LongLongSetPairSerializer())
+                        .setTypeClass(LongLongSetPair.class));
     }
 }

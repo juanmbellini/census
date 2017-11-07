@@ -2,36 +2,29 @@ package ar.edu.itba.pod.census.api.hazelcast.querymappers;
 
 import ar.edu.itba.pod.census.api.models.Citizen;
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.util.BooleanPair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-import java.util.function.Function;
-
 /**
- * {@link Mapper} for the query 3 (i.e transforms {@link Citizen} into a unit {@link java.util.Map.Entry}).
+ * {@link Mapper} for the query 3 (i.e transforms those {@link Citizen}s working or homeless
+ * into a &lt;{@link Region}, {@link Boolean}&gt; pair, being {@code true}if its working, or {@code false} otherwise).
  *
- * @param <K> The type of the input and output key.
+ * @param <K> The type of the input key.
  */
-public class Query3Mapper<K> implements Mapper<K, Citizen, Region, BooleanPair> {
-	
-	/**
-	 * Used for serialization of this {@link Mapper}.
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	public void map(K key, Citizen citizen, Context<Region, BooleanPair> context) {
-		
-		final Boolean isWorking = citizen.getActivityConditionId() == 1;
-		final Boolean isHomeless = citizen.getActivityConditionId() == 2;
-		
-		// Count citizen only if 'Ocupado' or 'Desocupado'
-		if (isWorking || isHomeless) {
-			context.emit(toOutKeyFunction().apply(citizen), new BooleanPair(isWorking, isHomeless));
-		}
-	}
-	
-	public Function<Citizen, Region> toOutKeyFunction() {
-		return Citizen::getRegion;
-	}
+public class Query3Mapper<K> implements Mapper<K, Citizen, Region, Boolean> {
+
+    /**
+     * Used for serialization of this {@link Mapper}.
+     */
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void map(K key, Citizen citizen, Context<Region, Boolean> context) {
+
+        final int activityConditionId = citizen.getActivityConditionId();
+        // Filter by activityCondition (Occupied or Not occupied)
+        if (activityConditionId == 1 || activityConditionId == 2) {
+            context.emit(citizen.getRegion(), activityConditionId == 1);
+        }
+    }
 }

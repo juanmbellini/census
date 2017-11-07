@@ -1,16 +1,16 @@
 package ar.edu.itba.pod.census.api.hazelcast.querycombiners;
 
 import ar.edu.itba.pod.census.api.models.Region;
-import ar.edu.itba.pod.census.api.util.BooleanPair;
 import ar.edu.itba.pod.census.api.util.IntegerPair;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
 /**
  * {@link CombinerFactory} for the query 3
- * (i.e returns a {@link Combiner} that count elements of the same department name).
+ * (i.e returns a {@link Combiner} that count working and homeless {@link ar.edu.itba.pod.census.api.models.Citizen}
+ * of the same {@link Region}).
  */
-public class Query3CombinerFactory implements CombinerFactory<Region, BooleanPair, IntegerPair> {
+public class Query3CombinerFactory implements CombinerFactory<Region, Boolean, IntegerPair> {
 
     /**
      * Used for serialization of this {@link CombinerFactory}.
@@ -18,17 +18,24 @@ public class Query3CombinerFactory implements CombinerFactory<Region, BooleanPai
     private static final long serialVersionUID = 1L;
 
     @Override
-    public Combiner<BooleanPair, IntegerPair> newCombiner(Region region) {
-        return new Combiner<BooleanPair, IntegerPair>() {
+    public Combiner<Boolean, IntegerPair> newCombiner(Region region) {
+        return new Combiner<Boolean, IntegerPair>() {
 
-            private int homeless;
-            private int working;
+            /**
+             * Contains the working {@link ar.edu.itba.pod.census.api.models.Citizen}s for the actual chunk.
+             */
+            private int working = 0;
+
+            /**
+             * Contains the homeless {@link ar.edu.itba.pod.census.api.models.Citizen}s for the actual chunk.
+             */
+            private int homeless = 0;
 
             @Override
-            public void combine(BooleanPair workingHomelessPair) {
-                if (workingHomelessPair.getLeft()) {
+            public void combine(Boolean isWorking) {
+                if (isWorking) {
                     working++;
-                } else if (workingHomelessPair.getRight()) {
+                } else {
                     homeless++;
                 }
             }
@@ -37,10 +44,9 @@ public class Query3CombinerFactory implements CombinerFactory<Region, BooleanPai
             public IntegerPair finalizeChunk() {
                 return new IntegerPair(working, homeless);
             }
-    
+
             @Override
             public void reset() {
-                super.reset();
                 homeless = 0;
                 working = 0;
             }
