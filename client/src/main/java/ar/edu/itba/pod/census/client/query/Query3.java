@@ -3,6 +3,8 @@ package ar.edu.itba.pod.census.client.query;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import ar.edu.itba.pod.census.api.hazelcast.querycollators.OrderByValueCollator;
+import ar.edu.itba.pod.census.api.hazelcast.querycollators.SortDirection;
 import ar.edu.itba.pod.census.api.hazelcast.querycombiners.Query3CombinerFactory;
 import ar.edu.itba.pod.census.api.hazelcast.queryreducers.Query3ReducerFactory;
 import com.hazelcast.core.HazelcastInstance;
@@ -31,7 +33,7 @@ public class Query3 extends HazelcastQuery<Region, Double> {
         return job.mapper(new Query3Mapper<>())
                 .combiner(new Query3CombinerFactory())
                 .reducer(new Query3ReducerFactory())
-                .submit()
+                .submit(new OrderByValueCollator<>(SortDirection.DESC))
                 .get();
     }
 }
