@@ -56,6 +56,12 @@ public class ConfigProvider {
                         .setTypeClass(IntegerSet.class))
                 .addSerializerConfig(new SerializerConfig()
                         .setImplementation(new LongSetSerializer())
-                        .setTypeClass(LongSet.class));
+                        .setTypeClass(LongSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new ProvinceSetSerializer())
+                        .setTypeClass(ProvinceSet.class))
+                .addSerializerConfig(new SerializerConfig()
+                        .setImplementation(new LongLongSetPairSerializer())
+                        .setTypeClass(LongLongSetPair.class));
     }
 }

@@ -26,7 +26,7 @@ public class Query4 extends HazelcastQuery<Region, Long> {
     protected Map<Region, Long> perform(Job<Long, Citizen> job, QueryParamsContainer params)
             throws ExecutionException, InterruptedException {
         return job.mapper(new Query4Mapper<>())
-//                .combiner(new Query4CombinerFactory())
+                .combiner(new Query4CombinerFactory())
                 .reducer(new Query4ReducerFactory())
                 .submit(new OrderByValueCollator<>(SortDirection.DESC))
                 .get();
